@@ -1,0 +1,77 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">SCREENS 7–8</div>
+      <h1>Claims</h1>
+      <p>Track claim progress and, for Service Providers, create and maintain draft claims.</p>
+    </div>
+    <div class="actions-row">
+      <button class="btn btn-secondary" type="button" (click)="load()">Refresh</button>
+      @if (auth.hasAnyRole(['ServiceProvider'])) {
+        <a class="btn btn-primary" routerLink="/claims/new">New claim</a>
+      }
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  <article class="card">
+    <div class="card-header">
+      <h2>Claims list</h2>
+      <input
+        class="search-input"
+        placeholder="Search claim, participant or status"
+        [value]="search()"
+        (input)="search.set($any($event.target).value)"
+      />
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Claim</th>
+            <th>Participant</th>
+            <th>Service period</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (claim of filtered(); track claim.id) {
+            <tr>
+              <td>
+                <strong>{{ claim.claimNumber }}</strong>
+                <small>{{ claim.createdAtUtc | date:'mediumDate' }}</small>
+              </td>
+              <td>{{ claim.participantName }}</td>
+              <td>
+                {{ claim.serviceFrom | date:'mediumDate' }}
+                <small>to {{ claim.serviceTo | date:'mediumDate' }}</small>
+              </td>
+              <td>{{ supportServiceName(claim.supportCategory) }}</td>
+              <td>{{ claim.amount | currency:'AUD' }}</td>
+              <td><span class="badge">{{ claim.status }}</span></td>
+              <td>
+                <div class="actions-cell">
+                  <a class="btn btn-secondary btn-small" [routerLink]="['/claims', claim.id]">View</a>
+                  @if (canEdit(claim.status)) {
+                    <a class="btn btn-ghost btn-small" [routerLink]="['/claims', claim.id, 'edit']">Edit</a>
+                  }
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7">{{ loading() ? 'Loading…' : 'No claims found.' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>

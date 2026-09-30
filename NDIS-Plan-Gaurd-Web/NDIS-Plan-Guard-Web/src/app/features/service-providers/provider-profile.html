@@ -1,0 +1,80 @@
+<section class="page narrow-page">
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">SCREEN 5</div>
+      <h1>Service Provider Profile</h1>
+      <p>Maintain your organisation and primary user details.</p>
+    </div>
+
+    @if (profile()) {
+      <a
+        class="btn btn-secondary"
+        [routerLink]="['/service-providers', profile()!.serviceProviderId, 'employees']">
+        Manage employees
+      </a>
+    }
+  </div>
+
+  @if (profile()) {
+    <div class="summary-strip">
+      <span>
+        Approval
+        <strong>{{ profile()!.approvalStatus }}</strong>
+      </span>
+      <span>
+        Provider status
+        <strong>{{ profile()!.status }}</strong>
+      </span>
+      <span>
+        Account
+        <strong>{{ profile()!.email }}</strong>
+      </span>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  @if (message()) {
+    <div class="alert alert-success">{{ message() }}</div>
+  }
+
+  <article class="card">
+    <form [formGroup]="form" (ngSubmit)="save()" class="form-grid">
+      <label>
+        <span>First name</span>
+        <input type="text" formControlName="firstName" />
+      </label>
+
+      <label>
+        <span>Last name</span>
+        <input type="text" formControlName="lastName" />
+      </label>
+
+      <label class="span-2">
+        <span>Legal name</span>
+        <input type="text" formControlName="legalName" />
+      </label>
+
+      <label>
+        <span>Trading name</span>
+        <input type="text" formControlName="tradingName" readonly />
+      </label>
+
+      <label>
+        <span>ABN</span>
+        <input type="text" formControlName="abn" maxlength="11" readonly />
+      </label>
+
+      <label class="span-2">
+        <span>NDIS registration number</span>
+        <input type="text" formControlName="ndisRegistrationNumber" readonly />
+      </label>
+
+      <div class="span-2 actions-row">
+        <button class="btn btn-primary" type="submit" [disabled]="loading()">Save changes</button>
+      </div>
+    </form>
+  </article>
+</section>

@@ -1,0 +1,25 @@
+<div class="auth-page auth-page-wide">
+  <section class="auth-panel auth-panel-wide">
+    <div class="eyebrow">SERVICE PROVIDER REGISTRATION</div>
+    <h1>Create your account</h1>
+    <p class="lead">Your account will remain inactive until an administrator approves the registration.</p>
+
+    @if (error()) { <div class="alert alert-error">{{ error() }}</div> }
+    @if (success()) { <div class="alert alert-success">{{ success() }}</div> }
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
+      <label>First name<input formControlName="firstName" /></label>
+      <label>Last name<input formControlName="lastName" /></label>
+      <label>Email<input type="email" formControlName="email" /></label>
+      <label>Password<input type="password" formControlName="password" /></label>
+      <label class="span-2">Legal organisation name<input formControlName="legalName" /></label>
+      <label>Trading name<input formControlName="tradingName" /></label>
+      <label>ABN<input formControlName="abn" inputmode="numeric" maxlength="11" /></label>
+      <label>NDIS registration number<input formControlName="ndisRegistrationNumber" /></label>
+      <label>Phone number<input formControlName="phoneNumber" /></label>
+      <div class="span-2 actions-row"><button class="btn btn-primary" type="submit" [disabled]="loading()">{{ loading() ? 'Submitting…' : 'Submit registration' }}</button></div>
+    </form>
+
+    <p class="auth-link">Already registered? <a routerLink="/login">Sign in</a></p>
+  </section>
+</div>

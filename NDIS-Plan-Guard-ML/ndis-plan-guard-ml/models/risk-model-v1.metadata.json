@@ -1,0 +1,242 @@
+{
+  "model_version": "risk-model-v1",
+  "dataset_version": "claim-risk-training-v1",
+  "feature_version": "risk-features-v1",
+  "algorithm": "LogisticRegression",
+  "selection_metric": "pr_auc",
+  "trained_at_utc": "2026-09-15T08:46:22.622513+00:00",
+  "training_rows": 12750,
+  "test_rows": 2250,
+  "target": "risk_label",
+  "positive_class_meaning": "Elevated review risk requiring additional human attention",
+  "decision_support_only": true,
+  "synthetic_data": true,
+  "minimum_recall_goal": 0.7,
+  "validation_threshold": 0.4000000000000002,
+  "risk_thresholds": {
+    "low_to_medium": 0.22,
+    "medium_to_high": 0.4000000000000002
+  },
+  "test_metrics": {
+    "threshold": 0.4,
+    "accuracy": 0.581778,
+    "precision": 0.197674,
+    "recall": 0.643533,
+    "f1": 0.302446,
+    "roc_auc": 0.680502,
+    "pr_auc": 0.358968,
+    "confusion_matrix": {
+      "tn": 1105,
+      "fp": 828,
+      "fn": 113,
+      "tp": 204
+    },
+    "predicted_positive_rate": 0.458667
+  },
+  "candidate_validation_metrics": {
+    "DummyPrior": {
+      "validation_metrics": {
+        "threshold": 0.2,
+        "accuracy": 0.856,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "roc_auc": 0.5,
+        "pr_auc": 0.144,
+        "confusion_matrix": {
+          "tn": 1926,
+          "fp": 0,
+          "fn": 324,
+          "tp": 0
+        },
+        "predicted_positive_rate": 0.0
+      },
+      "tuned_threshold": {
+        "threshold": 0.2,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    "LogisticRegression": {
+      "validation_metrics": {
+        "threshold": 0.4,
+        "accuracy": 0.546667,
+        "precision": 0.19844,
+        "recall": 0.70679,
+        "f1": 0.309878,
+        "roc_auc": 0.68303,
+        "pr_auc": 0.356548,
+        "confusion_matrix": {
+          "tn": 1001,
+          "fp": 925,
+          "fn": 95,
+          "tp": 229
+        },
+        "predicted_positive_rate": 0.512889
+      },
+      "tuned_threshold": {
+        "threshold": 0.4000000000000002,
+        "precision": 0.19844020797227035,
+        "recall": 0.7067901234567902,
+        "f1": 0.30987821380243574
+      }
+    },
+    "RandomForest": {
+      "validation_metrics": {
+        "threshold": 0.2,
+        "accuracy": 0.569333,
+        "precision": 0.198316,
+        "recall": 0.654321,
+        "f1": 0.304379,
+        "roc_auc": 0.672755,
+        "pr_auc": 0.33892,
+        "confusion_matrix": {
+          "tn": 1069,
+          "fp": 857,
+          "fn": 112,
+          "tp": 212
+        },
+        "predicted_positive_rate": 0.475111
+      },
+      "tuned_threshold": {
+        "threshold": 0.2,
+        "precision": 0.19831618334892423,
+        "recall": 0.654320987654321,
+        "f1": 0.30437903804737976
+      }
+    },
+    "HistGradientBoosting": {
+      "validation_metrics": {
+        "threshold": 0.36,
+        "accuracy": 0.528889,
+        "precision": 0.192308,
+        "recall": 0.709877,
+        "f1": 0.302632,
+        "roc_auc": 0.673688,
+        "pr_auc": 0.33573,
+        "confusion_matrix": {
+          "tn": 960,
+          "fp": 966,
+          "fn": 94,
+          "tp": 230
+        },
+        "predicted_positive_rate": 0.531556
+      },
+      "tuned_threshold": {
+        "threshold": 0.36000000000000015,
+        "precision": 0.19230769230769232,
+        "recall": 0.7098765432098766,
+        "f1": 0.3026315789473684
+      }
+    }
+  },
+  "global_importance": [
+    {
+      "feature": "categorical__service_category_Assistive Technology",
+      "importance": 0.32581326
+    },
+    {
+      "feature": "numeric__claim_to_participant_avg",
+      "importance": 0.26952516
+    },
+    {
+      "feature": "numeric__validation_finding_count",
+      "importance": 0.24311269
+    },
+    {
+      "feature": "numeric__claim_amount",
+      "importance": 0.23827037
+    },
+    {
+      "feature": "categorical__service_category_Transport",
+      "importance": 0.17926331
+    },
+    {
+      "feature": "numeric__claim_to_provider_avg",
+      "importance": 0.13559483
+    },
+    {
+      "feature": "numeric__unit_price",
+      "importance": 0.12341711
+    },
+    {
+      "feature": "categorical__service_category_Community Participation",
+      "importance": 0.1096369
+    },
+    {
+      "feature": "categorical__service_category_Home Living",
+      "importance": 0.09624168
+    },
+    {
+      "feature": "numeric__duplicate_warning",
+      "importance": 0.08801048
+    },
+    {
+      "feature": "numeric__participant_claims_30d",
+      "importance": 0.07910733
+    },
+    {
+      "feature": "categorical__service_category_Daily Activities",
+      "importance": 0.07577588
+    },
+    {
+      "feature": "numeric__provider_claims_7d",
+      "importance": 0.07049501
+    },
+    {
+      "feature": "categorical__service_category_Therapeutic Supports",
+      "importance": 0.06968774
+    },
+    {
+      "feature": "numeric__plan_remaining_before",
+      "importance": 0.06503277
+    },
+    {
+      "feature": "categorical__service_category_Support Coordination",
+      "importance": 0.04952218
+    },
+    {
+      "feature": "numeric__provider_claims_30d",
+      "importance": 0.03002025
+    },
+    {
+      "feature": "numeric__plan_total_budget",
+      "importance": 0.02176618
+    },
+    {
+      "feature": "numeric__participant_claims_7d",
+      "importance": 0.02103883
+    },
+    {
+      "feature": "numeric__plan_utilisation_before",
+      "importance": 0.02021447
+    },
+    {
+      "feature": "numeric__days_since_participant_previous_claim",
+      "importance": 0.01862155
+    },
+    {
+      "feature": "numeric__missingindicator_provider_avg_claim_prior",
+      "importance": 0.01790092
+    },
+    {
+      "feature": "numeric__provider_avg_claim_prior",
+      "importance": 0.01697839
+    },
+    {
+      "feature": "numeric__validation_high_count",
+      "importance": 0.01639738
+    },
+    {
+      "feature": "numeric__participant_claims_90d",
+      "importance": 0.01525121
+    }
+  ],
+  "limitations": [
+    "Trained on synthetic portfolio/demo claim data, not real NDIS claims.",
+    "Risk score is not a fraud determination and must not autonomously approve or reject a claim.",
+    "Human reviewers remain responsible for final decisions."
+  ],
+  "artifact_file": "risk-model-v1.joblib"
+}

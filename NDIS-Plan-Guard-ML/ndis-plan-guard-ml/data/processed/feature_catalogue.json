@@ -1,0 +1,226 @@
+[
+  {
+    "name": "claim_amount",
+    "group": "claim",
+    "description": "Current claim amount at submission",
+    "included": true,
+    "reason": "Operational input"
+  },
+  {
+    "name": "units",
+    "group": "claim",
+    "description": "Claimed service units",
+    "included": true,
+    "reason": "Operational input"
+  },
+  {
+    "name": "unit_price",
+    "group": "claim",
+    "description": "Claimed price per unit",
+    "included": true,
+    "reason": "Operational input"
+  },
+  {
+    "name": "service_category",
+    "group": "claim",
+    "description": "Service category",
+    "included": true,
+    "reason": "Operational input"
+  },
+  {
+    "name": "days_service_to_submission",
+    "group": "claim",
+    "description": "Delay between service and submission",
+    "included": true,
+    "reason": "Available pre-review"
+  },
+  {
+    "name": "plan_total_budget",
+    "group": "plan",
+    "description": "Plan budget for the active synthetic plan period",
+    "included": true,
+    "reason": "Operational input"
+  },
+  {
+    "name": "plan_remaining_before",
+    "group": "plan",
+    "description": "Remaining plan balance immediately before claim",
+    "included": true,
+    "reason": "Available at submission"
+  },
+  {
+    "name": "plan_utilisation_before",
+    "group": "plan",
+    "description": "Plan utilisation before current claim",
+    "included": true,
+    "reason": "Available at submission"
+  },
+  {
+    "name": "claim_to_remaining_ratio",
+    "group": "derived",
+    "description": "Claim amount divided by remaining plan balance",
+    "included": true,
+    "reason": "Explainable risk context"
+  },
+  {
+    "name": "participant_claims_7d",
+    "group": "participant_history",
+    "description": "Previous participant claims in 7 days",
+    "included": true,
+    "reason": "Historical only"
+  },
+  {
+    "name": "participant_claims_30d",
+    "group": "participant_history",
+    "description": "Previous participant claims in 30 days",
+    "included": true,
+    "reason": "Historical only"
+  },
+  {
+    "name": "participant_claims_90d",
+    "group": "participant_history",
+    "description": "Previous participant claims in 90 days",
+    "included": true,
+    "reason": "Historical only"
+  },
+  {
+    "name": "participant_avg_claim_prior",
+    "group": "participant_history",
+    "description": "Participant average claim using earlier claims only",
+    "included": true,
+    "reason": "Historical only"
+  },
+  {
+    "name": "claim_to_participant_avg",
+    "group": "derived",
+    "description": "Current claim relative to participant historical average",
+    "included": true,
+    "reason": "Explainable anomaly signal"
+  },
+  {
+    "name": "provider_claims_7d",
+    "group": "provider_history",
+    "description": "Previous provider claims in 7 days",
+    "included": true,
+    "reason": "Historical only"
+  },
+  {
+    "name": "provider_claims_30d",
+    "group": "provider_history",
+    "description": "Previous provider claims in 30 days",
+    "included": true,
+    "reason": "Historical only"
+  },
+  {
+    "name": "provider_claims_90d",
+    "group": "provider_history",
+    "description": "Previous provider claims in 90 days",
+    "included": true,
+    "reason": "Historical only"
+  },
+  {
+    "name": "provider_avg_claim_prior",
+    "group": "provider_history",
+    "description": "Provider average claim using earlier claims only",
+    "included": true,
+    "reason": "Historical only"
+  },
+  {
+    "name": "claim_to_provider_avg",
+    "group": "derived",
+    "description": "Current claim relative to provider historical average",
+    "included": true,
+    "reason": "Explainable anomaly signal"
+  },
+  {
+    "name": "days_since_participant_previous_claim",
+    "group": "participant_history",
+    "description": "Days since participant's previous claim",
+    "included": true,
+    "reason": "Historical only"
+  },
+  {
+    "name": "validation_finding_count",
+    "group": "validation",
+    "description": "Deterministic validation findings available before review",
+    "included": true,
+    "reason": "Combines rules with ML"
+  },
+  {
+    "name": "validation_high_count",
+    "group": "validation",
+    "description": "High severity validation findings",
+    "included": true,
+    "reason": "Available before review"
+  },
+  {
+    "name": "duplicate_warning",
+    "group": "validation",
+    "description": "Near-duplicate warning produced before review",
+    "included": true,
+    "reason": "Available before review"
+  },
+  {
+    "name": "plan_limit_warning",
+    "group": "validation",
+    "description": "Plan-limit warning produced before review",
+    "included": true,
+    "reason": "Available before review"
+  },
+  {
+    "name": "participant_name",
+    "group": "identity",
+    "description": "Participant name",
+    "included": false,
+    "reason": "Identity field; no modelling justification"
+  },
+  {
+    "name": "contact_person",
+    "group": "identity",
+    "description": "Nearest contact person",
+    "included": false,
+    "reason": "Identity/private contact field"
+  },
+  {
+    "name": "relationship",
+    "group": "identity",
+    "description": "Contact relationship",
+    "included": false,
+    "reason": "No modelling justification"
+  },
+  {
+    "name": "disability_type",
+    "group": "sensitive",
+    "description": "Participant disability type",
+    "included": false,
+    "reason": "Excluded from risk prediction"
+  },
+  {
+    "name": "reviewer_decision",
+    "group": "outcome",
+    "description": "Human review decision",
+    "included": false,
+    "reason": "Post-prediction leakage"
+  },
+  {
+    "name": "approval_status",
+    "group": "outcome",
+    "description": "Final approval status",
+    "included": false,
+    "reason": "Post-prediction leakage"
+  },
+  {
+    "name": "reviewer_comments",
+    "group": "outcome",
+    "description": "Reviewer free text",
+    "included": false,
+    "reason": "Post-prediction leakage"
+  },
+  {
+    "name": "ai_explanation",
+    "group": "downstream",
+    "description": "LLM explanation generated after risk scoring",
+    "included": false,
+    "reason": "Downstream leakage"
+  }
+]

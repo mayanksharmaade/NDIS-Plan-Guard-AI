@@ -1,0 +1,8 @@
+:host { display: block; }
+.budget-layout { display: grid; grid-template-columns: minmax(300px, .8fr) minmax(560px, 1.6fr); gap: 22px; align-items: start; }
+.plan-stack { display: grid; gap: 18px; }
+.template-summary, .metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 12px 0; }
+.template-summary > div, .metrics > div { background: #f6f8fa; border-radius: 12px; padding: 14px; }
+.template-summary span, .template-summary strong, .metrics span, .metrics strong { display: block; }
+.template-summary span, .metrics span { color: var(--muted); font-size: .78rem; margin-bottom: 5px; }
+@media (max-width: 1000px) { .budget-layout { grid-template-columns: 1fr; } }

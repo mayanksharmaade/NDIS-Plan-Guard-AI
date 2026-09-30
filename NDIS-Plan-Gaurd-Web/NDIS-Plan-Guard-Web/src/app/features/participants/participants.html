@@ -1,0 +1,456 @@
+<section class="page">
+
+  <div class="page-header">
+
+    <div>
+
+      <h1>
+        Participants
+      </h1>
+
+      <p>
+        Create and maintain participants linked to your Service Provider.
+      </p>
+
+    </div>
+
+    <button
+      class="btn btn-secondary"
+      type="button"
+      (click)="reset()">
+
+      New participant
+
+    </button>
+
+  </div>
+
+
+  @if (error()) {
+
+    <div class="alert alert-error">
+      {{ error() }}
+    </div>
+
+  }
+
+
+  @if (message()) {
+
+    <div class="alert alert-success">
+      {{ message() }}
+    </div>
+
+  }
+
+
+  <div class="two-column participants-layout">
+
+
+    <!-- ================================================== -->
+    <!-- CREATE / EDIT PARTICIPANT                          -->
+    <!-- ================================================== -->
+
+    <article class="card">
+
+      <h2>
+        {{
+          editingId()
+            ? 'Edit participant'
+            : 'Create participant'
+        }}
+      </h2>
+
+
+      <form
+        [formGroup]="form"
+        (ngSubmit)="save()"
+        class="stack">
+
+
+        <!-- NDIS NUMBER -->
+
+        <label>
+
+          NDIS number
+
+          <input
+            formControlName="ndisNumber" />
+
+        </label>
+
+
+        <!-- NAME -->
+
+        <div class="form-grid compact">
+
+          <label>
+
+            First name
+
+            <input
+              formControlName="firstName" />
+
+          </label>
+
+
+          <label>
+
+            Last name
+
+            <input
+              formControlName="lastName" />
+
+          </label>
+
+        </div>
+
+
+        <!-- DATE OF BIRTH -->
+
+        <label>
+
+          Date of birth
+
+          <input
+            type="date"
+            formControlName="dateOfBirth" />
+
+        </label>
+
+
+        <!-- EMAIL -->
+
+        <label>
+
+          Email
+
+          <input
+            type="email"
+            formControlName="email" />
+
+        </label>
+
+
+        <!-- PHONE -->
+
+        <label>
+
+          Phone
+
+          <input
+            type="tel"
+            formControlName="phoneNumber" />
+
+        </label>
+
+
+        <!-- ================================================= -->
+        <!-- EMERGENCY CONTACT                                 -->
+        <!-- ================================================= -->
+
+        <h3>
+          Emergency contact
+        </h3>
+
+
+        <div class="form-grid compact">
+
+          <label>
+
+            Contact name
+
+            <input
+              type="text"
+              formControlName="emergencyContactName"
+              placeholder="Contact person's name" />
+
+          </label>
+
+
+          <label>
+
+            Relationship
+
+            <input
+              type="text"
+              formControlName="emergencyContactRelationship"
+              placeholder="e.g. Parent, spouse, sibling" />
+
+          </label>
+
+        </div>
+
+
+        <label>
+
+          Emergency contact phone
+
+          <input
+            type="tel"
+            formControlName="emergencyContactPhoneNumber"
+            placeholder="e.g. 0412 345 678" />
+
+        </label>
+
+
+        <!-- ================================================= -->
+        <!-- PLAN DETAILS                                      -->
+        <!-- ================================================= -->
+
+        <div class="form-grid compact">
+
+          <label>
+
+            Plan start
+
+            <input
+              type="date"
+              formControlName="planStartDate" />
+
+          </label>
+
+
+          <label>
+
+            Plan end
+
+            <input
+              type="date"
+              formControlName="planEndDate" />
+
+          </label>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="actions-row">
+
+          <button
+            class="btn btn-primary"
+            type="submit">
+
+            {{
+              editingId()
+                ? 'Save changes'
+                : 'Create participant'
+            }}
+
+          </button>
+
+
+          @if (editingId()) {
+
+            <button
+              class="btn btn-secondary"
+              type="button"
+              (click)="reset()">
+
+              Cancel
+
+            </button>
+
+          }
+
+        </div>
+
+      </form>
+
+    </article>
+
+
+    <!-- ================================================== -->
+    <!-- PARTICIPANT LIST                                   -->
+    <!-- ================================================== -->
+
+    <article class="card card-wide">
+
+      <div class="card-header">
+
+        <h2>
+          Participant list
+        </h2>
+
+
+        <input
+          class="search-input"
+          placeholder="Search NDIS number or name"
+          [value]="search()"
+          (input)="search.set($any($event.target).value)" />
+
+      </div>
+
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                Participant
+              </th>
+
+              <th>
+                NDIS
+              </th>
+
+              <th>
+                Plan
+              </th>
+
+              <th>
+                Status
+              </th>
+
+              <th></th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            @for (
+              p of filtered();
+              track p.id
+            ) {
+
+              <tr>
+
+                <td>
+
+                  <strong>
+                    {{ p.firstName }}
+                    {{ p.lastName }}
+                  </strong>
+
+                  <small>
+                    {{
+                      p.email
+                      || p.phoneNumber
+                      || '—'
+                    }}
+                  </small>
+
+                </td>
+
+
+                <td>
+                  {{ p.ndisNumber }}
+                </td>
+
+
+                <td>
+
+                  {{
+                    p.planStartDate
+                    | date:'mediumDate'
+                  }}
+
+                  <small>
+
+                    to
+
+                    {{
+                      p.planEndDate
+                      | date:'mediumDate'
+                    }}
+
+                  </small>
+
+                </td>
+
+
+                <td>
+
+                  <span class="badge">
+                    {{ p.status }}
+                  </span>
+
+                </td>
+
+
+                <td class="actions-cell">
+
+                  <a
+                    class="btn btn-ghost btn-small"
+                    [routerLink]="['/participants', p.id, 'budget-plans']">
+
+                    Budget
+
+                  </a>
+
+
+                  <a
+                    class="btn btn-ghost btn-small"
+                    [routerLink]="['/participants', p.id, 'services']">
+
+                    Services
+
+                  </a>
+
+
+                  <button
+                    class="btn btn-secondary btn-small"
+                    type="button"
+                    (click)="edit(p)">
+
+                    Edit
+
+                  </button>
+
+
+                  @if (
+                    p.status !== 'Inactive'
+                  ) {
+
+                    <button
+                      class="btn btn-danger btn-small"
+                      type="button"
+                      (click)="deactivate(p)">
+
+                      Deactivate
+
+                    </button>
+
+                  }
+
+                </td>
+
+              </tr>
+
+            } @empty {
+
+              <tr>
+
+                <td colspan="5">
+
+                  {{
+                    loading()
+                      ? 'Loading…'
+                      : 'No participants found.'
+                  }}
+
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</section>

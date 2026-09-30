@@ -1,0 +1,69 @@
+@NDIS_Api_HostAddress = https://localhost:7038
+@token = PASTE_JWT_HERE
+@userProfileId = PASTE_USER_PROFILE_GUID
+@participantId = PASTE_PARTICIPANT_GUID
+
+### Register Service Provider
+POST {{NDIS_Api_HostAddress}}/api/auth/register/service-provider
+Content-Type: application/json
+
+{
+  "email": "provider2@test.com",
+  "password": "Provider@123",
+  "firstName": "Jane",
+  "lastName": "Smith",
+  "legalName": "Smith Support Services Pty Ltd",
+  "tradingName": "Smith Support",
+  "abn": "51824753556",
+  "ndisRegistrationNumber": "NDIS-REG-002",
+  "phoneNumber": "0400000000"
+}
+
+### Login
+POST {{NDIS_Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "superadmin@local.test",
+  "password": "YOUR_PASSWORD"
+}
+
+### Pending registrations (Admin/SuperAdmin)
+GET {{NDIS_Api_HostAddress}}/api/admin/users/registrations/pending
+Authorization: Bearer {{token}}
+
+### Approve registration
+POST {{NDIS_Api_HostAddress}}/api/admin/users/registrations/{{userProfileId}}/approve
+Authorization: Bearer {{token}}
+
+### My Service Provider profile
+GET {{NDIS_Api_HostAddress}}/api/service-providers/me
+Authorization: Bearer {{token}}
+
+### Create Participant
+POST {{NDIS_Api_HostAddress}}/api/participants
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "ndisNumber": "430000001",
+  "firstName": "Sample",
+  "lastName": "Participant",
+  "dateOfBirth": "1990-01-01",
+  "email": "participant@test.com",
+  "phoneNumber": "0411111111",
+  "planStartDate": "2026-01-01",
+  "planEndDate": "2026-12-31"
+}
+
+### Participants
+GET {{NDIS_Api_HostAddress}}/api/participants
+Authorization: Bearer {{token}}
+
+### Participant details
+GET {{NDIS_Api_HostAddress}}/api/participants/{{participantId}}
+Authorization: Bearer {{token}}
+
+### Claims list (empty until Screen 8 creates claims)
+GET {{NDIS_Api_HostAddress}}/api/claims
+Authorization: Bearer {{token}}

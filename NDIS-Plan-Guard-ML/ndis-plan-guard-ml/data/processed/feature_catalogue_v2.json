@@ -1,0 +1,380 @@
+[
+  {
+    "name": "claim_amount",
+    "group": "claim",
+    "description": "Current claim amount at submission",
+    "included": true,
+    "reason": "Operational input"
+  },
+  {
+    "name": "units",
+    "group": "claim",
+    "description": "Claimed service units",
+    "included": true,
+    "reason": "Operational input"
+  },
+  {
+    "name": "unit_price",
+    "group": "claim",
+    "description": "Claimed price per unit",
+    "included": true,
+    "reason": "Operational input"
+  },
+  {
+    "name": "service_category",
+    "group": "claim",
+    "description": "Service category",
+    "included": true,
+    "reason": "Operational input"
+  },
+  {
+    "name": "days_service_to_submission",
+    "group": "claim",
+    "description": "Delay between service and submission",
+    "included": true,
+    "reason": "Available pre-review"
+  },
+  {
+    "name": "plan_total_budget",
+    "group": "plan_v1",
+    "description": "Whole-plan budget for the active plan period",
+    "included": true,
+    "reason": "V1 operational input"
+  },
+  {
+    "name": "plan_remaining_before",
+    "group": "plan_v1",
+    "description": "Remaining whole-plan balance immediately before claim",
+    "included": true,
+    "reason": "V1 available at submission"
+  },
+  {
+    "name": "plan_utilisation_before",
+    "group": "plan_v1",
+    "description": "Whole-plan utilisation before current claim",
+    "included": true,
+    "reason": "V1 available at submission"
+  },
+  {
+    "name": "claim_to_remaining_ratio",
+    "group": "derived_v1",
+    "description": "Claim amount divided by remaining whole-plan balance",
+    "included": true,
+    "reason": "V1 explainable risk context"
+  },
+  {
+    "name": "fortnight_budget",
+    "group": "budget_v2",
+    "description": "Applicable fortnight budget or category limit",
+    "included": true,
+    "reason": "V2 operational budget context"
+  },
+  {
+    "name": "fortnight_spent_before",
+    "group": "budget_v2",
+    "description": "Eligible spend in the same fortnight before the current claim",
+    "included": true,
+    "reason": "Historical only"
+  },
+  {
+    "name": "fortnight_remaining_before",
+    "group": "budget_v2",
+    "description": "Fortnight budget remaining immediately before the current claim",
+    "included": true,
+    "reason": "Available pre-review"
+  },
+  {
+    "name": "budget_utilisation_before",
+    "group": "budget_v2",
+    "description": "Fortnight budget utilisation before the current claim",
+    "included": true,
+    "reason": "Explainable budget context"
+  },
+  {
+    "name": "claim_to_remaining_budget_ratio",
+    "group": "derived_v2",
+    "description": "Claim amount divided by remaining fortnight budget",
+    "included": true,
+    "reason": "Explainable budget anomaly signal"
+  },
+  {
+    "name": "amount_over_budget",
+    "group": "derived_v2",
+    "description": "Amount by which the claim exceeds the remaining fortnight budget",
+    "included": true,
+    "reason": "Deterministic numeric context"
+  },
+  {
+    "name": "service_hours",
+    "group": "service_v2",
+    "description": "Service duration in hours",
+    "included": true,
+    "reason": "Operational input"
+  },
+  {
+    "name": "claimed_hourly_rate",
+    "group": "service_v2",
+    "description": "Hourly rate represented by the submitted service/claim",
+    "included": true,
+    "reason": "Operational input"
+  },
+  {
+    "name": "expected_hourly_rate",
+    "group": "service_v2",
+    "description": "Expected or agreed hourly rate available before review",
+    "included": true,
+    "reason": "Operational benchmark"
+  },
+  {
+    "name": "expected_service_cost",
+    "group": "service_v2",
+    "description": "Expected service cost from hours multiplied by expected rate",
+    "included": true,
+    "reason": "Derived pre-review fact"
+  },
+  {
+    "name": "amount_variance",
+    "group": "service_v2",
+    "description": "Claim amount minus expected service cost",
+    "included": true,
+    "reason": "Explainable cost anomaly signal"
+  },
+  {
+    "name": "amount_variance_percent",
+    "group": "service_v2",
+    "description": "Amount variance relative to expected service cost",
+    "included": true,
+    "reason": "Scale-normalised cost anomaly signal"
+  },
+  {
+    "name": "participant_claims_7d",
+    "group": "participant_history",
+    "description": "Previous participant claims in 7 days",
+    "included": true,
+    "reason": "Historical only"
+  },
+  {
+    "name": "participant_claims_30d",
+    "group": "participant_history",
+    "description": "Previous participant claims in 30 days",
+    "included": true,
+    "reason": "Historical only"
+  },
+  {
+    "name": "participant_claims_90d",
+    "group": "participant_history",
+    "description": "Previous participant claims in 90 days",
+    "included": true,
+    "reason": "Historical only"
+  },
+  {
+    "name": "participant_avg_claim_prior",
+    "group": "participant_history",
+    "description": "Participant average claim using earlier claims only",
+    "included": true,
+    "reason": "Historical only"
+  },
+  {
+    "name": "claim_to_participant_avg",
+    "group": "derived",
+    "description": "Current claim relative to participant historical average",
+    "included": true,
+    "reason": "Explainable anomaly signal"
+  },
+  {
+    "name": "provider_claims_7d",
+    "group": "provider_history",
+    "description": "Previous provider claims in 7 days",
+    "included": true,
+    "reason": "Historical only"
+  },
+  {
+    "name": "provider_claims_30d",
+    "group": "provider_history",
+    "description": "Previous provider claims in 30 days",
+    "included": true,
+    "reason": "Historical only"
+  },
+  {
+    "name": "provider_claims_90d",
+    "group": "provider_history",
+    "description": "Previous provider claims in 90 days",
+    "included": true,
+    "reason": "Historical only"
+  },
+  {
+    "name": "provider_avg_claim_prior",
+    "group": "provider_history",
+    "description": "Provider average claim using earlier claims only",
+    "included": true,
+    "reason": "Historical only"
+  },
+  {
+    "name": "claim_to_provider_avg",
+    "group": "derived",
+    "description": "Current claim relative to provider historical average",
+    "included": true,
+    "reason": "Explainable anomaly signal"
+  },
+  {
+    "name": "days_since_participant_previous_claim",
+    "group": "participant_history",
+    "description": "Days since participant's previous claim",
+    "included": true,
+    "reason": "Historical only"
+  },
+  {
+    "name": "employee_claims_7d",
+    "group": "employee_history_v2",
+    "description": "Previous claims linked to the same employee in 7 days",
+    "included": true,
+    "reason": "Historical operational aggregate"
+  },
+  {
+    "name": "employee_claims_30d",
+    "group": "employee_history_v2",
+    "description": "Previous claims linked to the same employee in 30 days",
+    "included": true,
+    "reason": "Historical operational aggregate"
+  },
+  {
+    "name": "employee_claims_90d",
+    "group": "employee_history_v2",
+    "description": "Previous claims linked to the same employee in 90 days",
+    "included": true,
+    "reason": "Historical operational aggregate"
+  },
+  {
+    "name": "validation_finding_count",
+    "group": "validation",
+    "description": "Deterministic validation findings available before review",
+    "included": true,
+    "reason": "Combines rules with ML"
+  },
+  {
+    "name": "validation_high_count",
+    "group": "validation",
+    "description": "High severity validation findings",
+    "included": true,
+    "reason": "Available before review"
+  },
+  {
+    "name": "duplicate_warning",
+    "group": "validation_v1",
+    "description": "Near-duplicate warning produced before review",
+    "included": true,
+    "reason": "V1 available before review"
+  },
+  {
+    "name": "plan_limit_warning",
+    "group": "validation_v1",
+    "description": "Whole-plan limit warning produced before review",
+    "included": true,
+    "reason": "V1 available before review"
+  },
+  {
+    "name": "duplicate_service_count",
+    "group": "validation_v2",
+    "description": "Number of matching duplicate-service findings for the current service",
+    "included": true,
+    "reason": "Deterministic pre-review finding"
+  },
+  {
+    "name": "overlapping_service_count",
+    "group": "validation_v2",
+    "description": "Number of overlapping service-window findings",
+    "included": true,
+    "reason": "Deterministic pre-review finding"
+  },
+  {
+    "name": "concurrent_employee_service_count",
+    "group": "validation_v2",
+    "description": "Number of other concurrent services linked to the same employee",
+    "included": true,
+    "reason": "Deterministic pre-review finding"
+  },
+  {
+    "name": "location_conflict_count",
+    "group": "validation_v2",
+    "description": "Number of impossible-location conflict findings",
+    "included": true,
+    "reason": "Deterministic pre-review finding"
+  },
+  {
+    "name": "participant_name",
+    "group": "identity",
+    "description": "Participant name",
+    "included": false,
+    "reason": "Identity field; no modelling justification"
+  },
+  {
+    "name": "ndis_number",
+    "group": "identity",
+    "description": "Participant NDIS number",
+    "included": false,
+    "reason": "Identity field; excluded from modelling"
+  },
+  {
+    "name": "employee_name",
+    "group": "identity",
+    "description": "Employee/support worker name",
+    "included": false,
+    "reason": "Identity field; excluded from modelling"
+  },
+  {
+    "name": "provider_name",
+    "group": "identity",
+    "description": "Provider display/legal name",
+    "included": false,
+    "reason": "Identity field; excluded from modelling"
+  },
+  {
+    "name": "contact_person",
+    "group": "identity",
+    "description": "Nearest contact person",
+    "included": false,
+    "reason": "Identity/private contact field"
+  },
+  {
+    "name": "relationship",
+    "group": "identity",
+    "description": "Contact relationship",
+    "included": false,
+    "reason": "No modelling justification"
+  },
+  {
+    "name": "disability_type",
+    "group": "sensitive",
+    "description": "Participant disability type",
+    "included": false,
+    "reason": "Excluded from risk prediction"
+  },
+  {
+    "name": "reviewer_decision",
+    "group": "outcome",
+    "description": "Human review decision",
+    "included": false,
+    "reason": "Post-prediction leakage"
+  },
+  {
+    "name": "approval_status",
+    "group": "outcome",
+    "description": "Final approval status",
+    "included": false,
+    "reason": "Post-prediction leakage"
+  },
+  {
+    "name": "reviewer_comments",
+    "group": "outcome",
+    "description": "Reviewer free text",
+    "included": false,
+    "reason": "Post-prediction leakage"
+  },
+  {
+    "name": "ai_explanation",
+    "group": "downstream",
+    "description": "LLM explanation generated after risk scoring",
+    "included": false,
+    "reason": "Downstream leakage"
+  }
+]

@@ -1,0 +1,118 @@
+{
+  "rows": 15000,
+  "columns": 52,
+  "risk_distribution": {
+    "0": 13411,
+    "1": 1589
+  },
+  "risk_rate": 0.10593333333333334,
+  "service_category_distribution": {
+    "Daily Activities": 3607,
+    "Community Participation": 2776,
+    "Therapeutic Supports": 2224,
+    "Support Coordination": 1892,
+    "Home Living": 1788,
+    "Transport": 1512,
+    "Assistive Technology": 1201
+  },
+  "numeric_by_risk": {
+    "claim_amount": {
+      "0": {
+        "count": 13411.0,
+        "mean": 436.4139,
+        "median": 335.69,
+        "std": 406.8031
+      },
+      "1": {
+        "count": 1589.0,
+        "mean": 782.2519,
+        "median": 433.64,
+        "std": 973.8408
+      }
+    },
+    "plan_utilisation_before": {
+      "0": {
+        "count": 13411.0,
+        "mean": 0.0338,
+        "median": 0.0202,
+        "std": 0.0418
+      },
+      "1": {
+        "count": 1589.0,
+        "mean": 0.0382,
+        "median": 0.0223,
+        "std": 0.0489
+      }
+    },
+    "participant_claims_30d": {
+      "0": {
+        "count": 13411.0,
+        "mean": 0.9625,
+        "median": 1.0,
+        "std": 1.177
+      },
+      "1": {
+        "count": 1589.0,
+        "mean": 1.0321,
+        "median": 1.0,
+        "std": 1.243
+      }
+    },
+    "provider_claims_30d": {
+      "0": {
+        "count": 13411.0,
+        "mean": 5.354,
+        "median": 5.0,
+        "std": 4.0157
+      },
+      "1": {
+        "count": 1589.0,
+        "mean": 5.4481,
+        "median": 5.0,
+        "std": 3.9857
+      }
+    },
+    "claim_to_participant_avg": {
+      "0": {
+        "count": 13411.0,
+        "mean": 1.1233,
+        "median": 0.8326,
+        "std": 1.3366
+      },
+      "1": {
+        "count": 1589.0,
+        "mean": 1.9559,
+        "median": 1.0,
+        "std": 3.0919
+      }
+    },
+    "claim_to_provider_avg": {
+      "0": {
+        "count": 13411.0,
+        "mean": 0.9833,
+        "median": 0.7283,
+        "std": 1.0116
+      },
+      "1": {
+        "count": 1589.0,
+        "mean": 1.7409,
+        "median": 0.9441,
+        "std": 2.2247
+      }
+    },
+    "validation_finding_count": {
+      "0": {
+        "count": 13411.0,
+        "mean": 0.286,
+        "median": 0.0,
+        "std": 0.6437
+      },
+      "1": {
+        "count": 1589.0,
+        "mean": 1.0459,
+        "median": 1.0,
+        "std": 1.1482
+      }
+    }
+  }
+}

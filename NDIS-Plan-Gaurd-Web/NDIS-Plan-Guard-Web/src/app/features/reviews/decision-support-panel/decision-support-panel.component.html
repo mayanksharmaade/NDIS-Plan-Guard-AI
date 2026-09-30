@@ -1,0 +1,108 @@
+<section class="claim-summary">
+  <div class="summary-chip">Claim <strong>{{ model.claimNumber }}</strong></div>
+  <div class="summary-chip">Status <strong>{{ model.status }}</strong></div>
+  <div class="summary-chip">Amount <strong>{{ model.claimAmount | currency:'AUD' }}</strong></div>
+  <div class="summary-chip">
+    Risk
+    <strong>{{ model.mlRisk?.riskBand || 'Unavailable' }} {{ model.mlRisk?.score ?? '' }}</strong>
+  </div>
+</section>
+
+<div class="decision-grid">
+  <section class="card">
+    <h2>Participant support context</h2>
+    <div class="data-row"><span>Participant</span><strong>{{ model.participant.participantName }}</strong></div>
+    <div class="data-row"><span>NDIS number</span><strong>{{ model.participant.ndisNumber }}</strong></div>
+    <div class="data-row">
+      <span>Primary category</span>
+      <strong>{{ model.participant.primaryDisabilityCategory || 'Not recorded' }}</strong>
+    </div>
+
+    <div class="support-tags" *ngIf="model.participant.functionalSupportDomains.length">
+      <span *ngFor="let domain of model.participant.functionalSupportDomains" class="tag">
+        {{ domain }}
+      </span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Fortnight budget</h2>
+    <div class="metric-grid">
+      <div><span>Allocation</span><strong>{{ model.budget.fortnightBudget | currency:'AUD' }}</strong></div>
+      <div><span>Already used</span><strong>{{ model.budget.fortnightSpentBefore | currency:'AUD' }}</strong></div>
+      <div><span>Remaining</span><strong>{{ model.budget.fortnightRemainingBefore | currency:'AUD' }}</strong></div>
+      <div><span>Current claim</span><strong>{{ model.claimAmount | currency:'AUD' }}</strong></div>
+    </div>
+
+    <div *ngIf="model.budget.budgetExceeded" class="warning-panel">
+      Claim exceeds the participant's remaining fortnight budget by
+      <strong>{{ model.budget.amountOverBudget | currency:'AUD' }}</strong>.
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Provider &amp; service cost</h2>
+    <div class="data-row"><span>Provider</span><strong>{{ model.providerName }}</strong></div>
+    <div class="data-row"><span>Service</span><strong>{{ model.supportCategory }}</strong></div>
+    <div class="data-row"><span>Hours</span><strong>{{ model.service.serviceHours ?? '—' }}</strong></div>
+    <div class="data-row"><span>Claimed rate</span><strong>{{ model.service.claimedHourlyRate | currency:'AUD' }}</strong></div>
+    <div class="data-row"><span>Typical provider rate</span><strong>{{ model.service.providerTypicalHourlyRate | currency:'AUD' }}</strong></div>
+    <div class="data-row"><span>Expected service cost</span><strong>{{ model.service.expectedServiceCost | currency:'AUD' }}</strong></div>
+    <div class="data-row"><span>Claimed amount</span><strong>{{ model.service.claimedAmount | currency:'AUD' }}</strong></div>
+  </section>
+
+  <section class="card findings-card">
+    <h2>Why this claim was flagged</h2>
+
+    <div *ngIf="!model.findings.length" class="no-findings">
+      No deterministic validation findings were identified.
+    </div>
+
+    <article
+      *ngFor="let finding of model.findings"
+      class="finding"
+      [ngClass]="findingClass(finding.severity)">
+      <div class="finding-title">
+        <strong>{{ finding.title }}</strong>
+        <span class="severity">{{ finding.severity }}</span>
+      </div>
+      <p>{{ finding.description }}</p>
+      <small *ngIf="finding.evidence">{{ finding.evidence }}</small>
+    </article>
+  </section>
+</div>
+
+<section class="card ml-card">
+  <div class="ml-header">
+    <div>
+      <h2>ML decision support</h2>
+      <p>
+        Machine-learning risk indicators supplement deterministic validation.
+        They do not determine the final claim decision.
+      </p>
+    </div>
+
+    <div class="risk-score" [ngClass]="riskClass()">
+      <strong>{{ model.mlRisk?.score ?? '—' }}</strong>
+      <span>/ 100</span>
+      <small>{{ model.mlRisk?.riskBand || 'Unavailable' }}</small>
+    </div>
+  </div>
+
+  <div *ngIf="model.mlRisk?.available" class="risk-factors">
+    <article *ngFor="let factor of model.mlRisk?.factors">
+      <strong>{{ factor.description }}</strong>
+      <div>
+        Observed: {{ factor.observedValue }}
+        &nbsp; | &nbsp;
+        Baseline: {{ factor.baselineValue }}
+      </div>
+    </article>
+  </div>
+
+  <div *ngIf="model.mlRisk as mlRisk">
+    <div *ngIf="!mlRisk.available" class="warning-panel">
+      ML risk scoring unavailable: {{ mlRisk.failureReason }}
+    </div>
+  </div>
+</section>

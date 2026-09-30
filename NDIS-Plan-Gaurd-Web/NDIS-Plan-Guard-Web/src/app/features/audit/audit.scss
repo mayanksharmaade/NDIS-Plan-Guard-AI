@@ -1,0 +1,74 @@
+.audit-filters {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1.4fr auto;
+  gap: 14px;
+  align-items: end;
+  margin-bottom: 22px;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.activity-list {
+  display: grid;
+}
+
+.activity-item {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 12px;
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.activity-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 14px;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+
+.activity-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--primary);
+  margin-top: 4px;
+  z-index: 1;
+}
+
+.activity-content {
+  padding: 0 0 2px;
+}
+
+.activity-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.activity-heading time {
+  color: var(--muted);
+  font-size: .82rem;
+  white-space: nowrap;
+}
+
+.activity-content p {
+  margin: 8px 0 5px;
+}
+
+@media (max-width: 900px) {
+  .audit-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .activity-heading {
+    flex-direction: column;
+    gap: 4px;
+  }
+}

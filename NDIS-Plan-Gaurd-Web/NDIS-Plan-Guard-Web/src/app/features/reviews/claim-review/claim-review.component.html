@@ -1,0 +1,938 @@
+<!-- ====================================================== -->
+<!-- LOADING                                                -->
+<!-- ====================================================== -->
+
+<div *ngIf="loading">
+  Loading claim decision support...
+</div>
+
+
+<!-- ====================================================== -->
+<!-- ERROR                                                  -->
+<!-- ====================================================== -->
+
+<div
+  *ngIf="error"
+  class="error-message">
+
+  {{ error }}
+
+</div>
+
+
+<!-- ====================================================== -->
+<!-- MAIN PAGE                                              -->
+<!-- ====================================================== -->
+
+<div
+  *ngIf="model"
+  class="decision-page">
+
+
+  <!-- ==================================================== -->
+  <!-- HEADER                                               -->
+  <!-- ==================================================== -->
+
+  <header class="decision-header">
+
+    <div>
+
+      <p class="eyebrow">
+        CLAIM DECISION SUPPORT
+      </p>
+
+      <h1>
+        Claim review &amp; decision
+      </h1>
+
+      <p>
+        Review claim details, validation findings
+        and ML risk indicators before recording
+        the final human decision.
+      </p>
+
+    </div>
+
+  </header>
+
+
+  <!-- ==================================================== -->
+  <!-- SUMMARY BOXES                                        -->
+  <!-- ==================================================== -->
+
+  <section class="claim-summary">
+
+
+    <!-- CLAIM -->
+
+    <div class="summary-chip">
+
+      Claim
+
+      <strong>
+        {{ model.claimNumber }}
+      </strong>
+
+    </div>
+
+
+    <!-- STATUS -->
+
+    <div class="summary-chip">
+
+      Status
+
+      <strong>
+        {{ model.status }}
+      </strong>
+
+    </div>
+
+
+    <!-- AMOUNT -->
+
+    <div class="summary-chip">
+
+      Amount
+
+      <strong>
+        {{
+          model.claimAmount
+          | currency:'AUD'
+        }}
+      </strong>
+
+    </div>
+
+
+    <!-- PROVIDER -->
+
+    <div class="summary-chip">
+
+      Provider
+
+      <strong>
+        {{ model.providerName }}
+      </strong>
+
+    </div>
+
+
+    <!-- RISK SCORE -->
+
+    <div class="summary-chip">
+
+      Risk Score
+
+      <strong>
+
+        <ng-container
+          *ngIf="
+            model.mlRisk?.score !== undefined
+            && model.mlRisk?.score !== null
+          ">
+
+          {{ model.mlRisk?.score }} / 100
+
+        </ng-container>
+
+
+        <ng-container
+          *ngIf="
+            model.mlRisk?.score === undefined
+            || model.mlRisk?.score === null
+          ">
+
+          —
+
+        </ng-container>
+
+      </strong>
+
+    </div>
+
+
+    <!-- RISK BAND -->
+
+    <div class="summary-chip">
+
+      Risk
+
+      <strong>
+        {{
+          model.mlRisk?.riskBand
+          || 'Unavailable'
+        }}
+      </strong>
+
+    </div>
+
+  </section>
+
+
+  <!-- ==================================================== -->
+  <!-- RISK REASONS                                         -->
+  <!-- ==================================================== -->
+
+  <section class="card">
+
+    <h2>
+      Risk reasons
+    </h2>
+
+
+    <!-- ML SCORING UNAVAILABLE -->
+
+    <div
+      *ngIf="
+        model.mlRisk
+        && !model.mlRisk.available
+      "
+      class="warning-panel">
+
+      <strong>
+        ML risk scoring unavailable
+      </strong>
+
+      <p>
+        {{
+          model.mlRisk.failureReason
+          || 'No failure reason was supplied.'
+        }}
+      </p>
+
+    </div>
+
+
+    <!-- NO REASONS -->
+
+    <div
+      *ngIf="
+        model.findings.length === 0
+        &&
+        (
+          !model.mlRisk?.factors
+          ||
+          model.mlRisk?.factors?.length === 0
+        )
+      "
+      class="no-findings">
+
+      No validation or ML risk reasons
+      were returned for this claim.
+
+    </div>
+
+
+    <!-- DETERMINISTIC FINDINGS -->
+
+    <div
+      *ngIf="
+        model.findings.length > 0
+      ">
+
+      <h3>
+        Validation findings
+      </h3>
+
+
+      <article
+        *ngFor="
+          let finding of model.findings
+        "
+        class="finding">
+
+        <div class="finding-title">
+
+          <strong>
+            {{ finding.title }}
+          </strong>
+
+          <span class="severity">
+            {{ finding.severity }}
+          </span>
+
+        </div>
+
+
+        <p>
+          {{ finding.description }}
+        </p>
+
+
+        <small
+          *ngIf="finding.evidence">
+
+          {{ finding.evidence }}
+
+        </small>
+
+      </article>
+
+    </div>
+
+
+    <!-- ML CONTRIBUTING FACTORS -->
+
+    <div
+      *ngIf="
+        model.mlRisk?.available
+        &&
+        model.mlRisk?.factors
+        &&
+        model.mlRisk?.factors?.length
+      "
+      class="risk-factors">
+
+      <h3>
+        ML contributing factors
+      </h3>
+
+
+      <article
+        *ngFor="
+          let factor of model.mlRisk?.factors
+        ">
+
+        <strong>
+          {{ factor.description }}
+        </strong>
+
+
+        <div
+          *ngIf="
+            factor.observedValue
+            || factor.baselineValue
+          ">
+
+          <span
+            *ngIf="factor.observedValue">
+
+            Observed:
+            {{ factor.observedValue }}
+
+          </span>
+
+
+          <span
+            *ngIf="factor.baselineValue">
+
+            &nbsp; | &nbsp;
+
+            Baseline:
+            {{ factor.baselineValue }}
+
+          </span>
+
+        </div>
+
+      </article>
+
+    </div>
+
+
+    <!-- MODEL INFO -->
+
+    <div
+      *ngIf="
+        model.mlRisk?.available
+      "
+      class="model-meta">
+
+      Model:
+
+      <strong>
+        {{
+          model.mlRisk?.modelVersion
+          || 'Unknown'
+        }}
+      </strong>
+
+      &nbsp; | &nbsp;
+
+      Feature version:
+
+      <strong>
+        {{
+          model.mlRisk?.featureVersion
+          || 'Unknown'
+        }}
+      </strong>
+
+    </div>
+
+  </section>
+
+
+  <!-- ==================================================== -->
+  <!-- DETAILS GRID                                         -->
+  <!-- ==================================================== -->
+
+  <div class="decision-grid">
+
+
+    <!-- ================================================== -->
+    <!-- PARTICIPANT                                        -->
+    <!-- ================================================== -->
+
+    <section class="card">
+
+      <h2>
+        Participant support context
+      </h2>
+
+
+      <div class="data-row">
+
+        <span>
+          Participant
+        </span>
+
+        <strong>
+          {{
+            model.participant
+              .participantName
+          }}
+        </strong>
+
+      </div>
+
+
+      <div class="data-row">
+
+        <span>
+          NDIS number
+        </span>
+
+        <strong>
+          {{
+            model.participant
+              .ndisNumber
+          }}
+        </strong>
+
+      </div>
+
+
+      <div class="data-row">
+
+        <span>
+          Primary category
+        </span>
+
+        <strong>
+
+          {{
+            model.participant
+              .primaryDisabilityCategory
+              || 'Not recorded'
+          }}
+
+        </strong>
+
+      </div>
+
+
+      <div
+        class="support-tags"
+        *ngIf="
+          model.participant
+            .functionalSupportDomains
+            .length > 0
+        ">
+
+        <span
+          *ngFor="
+            let domain of
+            model.participant
+              .functionalSupportDomains
+          "
+          class="tag">
+
+          {{ domain }}
+
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================================================== -->
+    <!-- BUDGET                                             -->
+    <!-- ================================================== -->
+
+    <section class="card">
+
+      <h2>
+        Fortnight budget
+      </h2>
+
+
+      <div class="metric-grid">
+
+
+        <div>
+
+          <span>
+            Allocation
+          </span>
+
+          <strong>
+
+            {{
+              model.budget
+                .fortnightBudget
+              | currency:'AUD'
+            }}
+
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Already used
+          </span>
+
+          <strong>
+
+            {{
+              model.budget
+                .fortnightSpentBefore
+              | currency:'AUD'
+            }}
+
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Remaining
+          </span>
+
+          <strong>
+
+            {{
+              model.budget
+                .fortnightRemainingBefore
+              | currency:'AUD'
+            }}
+
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Current claim
+          </span>
+
+          <strong>
+
+            {{
+              model.claimAmount
+              | currency:'AUD'
+            }}
+
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div
+        *ngIf="
+          model.budget
+            .budgetExceeded
+        "
+        class="warning-panel">
+
+        Claim exceeds the participant's
+        remaining fortnight budget by
+
+        <strong>
+
+          {{
+            model.budget
+              .amountOverBudget
+            | currency:'AUD'
+          }}
+
+        </strong>.
+
+      </div>
+
+    </section>
+
+
+    <!-- ================================================== -->
+    <!-- SERVICE                                            -->
+    <!-- ================================================== -->
+
+    <section class="card">
+
+      <h2>
+        Provider &amp; service cost
+      </h2>
+
+
+      <div class="data-row">
+
+        <span>
+          Provider
+        </span>
+
+        <strong>
+          {{ model.providerName }}
+        </strong>
+
+      </div>
+
+
+      <div class="data-row">
+
+        <span>
+          Service
+        </span>
+
+        <strong>
+          {{ model.supportCategory }}
+        </strong>
+
+      </div>
+
+
+      <div class="data-row">
+
+        <span>
+          Hours
+        </span>
+
+        <strong>
+
+          {{
+            model.service
+              .serviceHours
+            ?? '—'
+          }}
+
+        </strong>
+
+      </div>
+
+
+      <div class="data-row">
+
+        <span>
+          Claimed rate
+        </span>
+
+        <strong>
+
+          {{
+            model.service
+              .claimedHourlyRate
+            | currency:'AUD'
+          }}
+
+        </strong>
+
+      </div>
+
+
+      <div class="data-row">
+
+        <span>
+          Typical provider rate
+        </span>
+
+        <strong>
+
+          {{
+            model.service
+              .providerTypicalHourlyRate
+            | currency:'AUD'
+          }}
+
+        </strong>
+
+      </div>
+
+
+      <div class="data-row">
+
+        <span>
+          Service typical rate
+        </span>
+
+        <strong>
+
+          {{
+            model.service
+              .serviceTypicalHourlyRate
+            | currency:'AUD'
+          }}
+
+        </strong>
+
+      </div>
+
+
+      <div class="data-row">
+
+        <span>
+          Expected service cost
+        </span>
+
+        <strong>
+
+          {{
+            model.service
+              .expectedServiceCost
+            | currency:'AUD'
+          }}
+
+        </strong>
+
+      </div>
+
+
+      <div class="data-row">
+
+        <span>
+          Claimed amount
+        </span>
+
+        <strong>
+
+          {{
+            model.service
+              .claimedAmount
+            | currency:'AUD'
+          }}
+
+        </strong>
+
+      </div>
+
+
+      <div class="data-row">
+
+        <span>
+          Amount variance
+        </span>
+
+        <strong>
+
+          {{
+            model.service
+              .amountVariance
+            | currency:'AUD'
+          }}
+
+        </strong>
+
+      </div>
+
+
+      <div class="data-row">
+
+        <span>
+          Rate variance
+        </span>
+
+        <strong>
+
+          <ng-container
+            *ngIf="
+              model.service
+                .rateVariancePercent !== undefined
+              &&
+              model.service
+                .rateVariancePercent !== null
+            ">
+
+            {{
+              model.service
+                .rateVariancePercent
+            }}%
+
+          </ng-container>
+
+
+          <ng-container
+            *ngIf="
+              model.service
+                .rateVariancePercent === undefined
+              ||
+              model.service
+                .rateVariancePercent === null
+            ">
+
+            —
+
+          </ng-container>
+
+        </strong>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================================================== -->
+    <!-- ACTIVITY / OVERLAP                                 -->
+    <!-- ================================================== -->
+
+    <section class="card">
+
+      <h2>
+        Service activity context
+      </h2>
+
+
+      <div class="data-row">
+
+        <span>
+          Concurrent participants
+        </span>
+
+        <strong>
+          {{
+            model.service
+              .concurrentParticipantCount
+          }}
+        </strong>
+
+      </div>
+
+
+      <div class="data-row">
+
+        <span>
+          Overlapping service minutes
+        </span>
+
+        <strong>
+          {{
+            model.service
+              .overlappingServiceMinutes
+          }}
+        </strong>
+
+      </div>
+
+
+      <div class="data-row">
+
+        <span>
+          Service location
+        </span>
+
+        <strong>
+          {{
+            model.service
+              .serviceLocation
+              || 'Not recorded'
+          }}
+        </strong>
+
+      </div>
+
+    </section>
+
+  </div>
+
+
+  <!-- ==================================================== -->
+  <!-- ML SUMMARY                                           -->
+  <!-- ==================================================== -->
+
+  <section class="card ml-card">
+
+    <div class="ml-header">
+
+
+      <div>
+
+        <h2>
+          ML decision support
+        </h2>
+
+        <p>
+          Machine-learning risk indicators
+          supplement validation findings.
+          They do not determine the final
+          claim decision.
+        </p>
+
+      </div>
+
+
+      <!-- No ngClass / no riskClass() -->
+
+      <div class="risk-score">
+
+        <strong>
+
+          {{
+            model.mlRisk?.score
+            ?? '—'
+          }}
+
+        </strong>
+
+
+        <span>
+          / 100
+        </span>
+
+
+        <small>
+
+          {{
+            model.mlRisk?.riskBand
+            || 'Unavailable'
+          }}
+
+        </small>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ==================================================== -->
+  <!-- HUMAN REVIEW                                         -->
+  <!-- ==================================================== -->
+
+  <section class="human-decision">
+
+    <!--
+      KEEP YOUR EXISTING HUMAN REVIEW CONTROLS HERE.
+
+      Approve
+      Reject
+      Request More Information
+      Reviewer comments
+      Record decision
+      Review history
+
+      Do not move the human decision into the ML section.
+    -->
+
+  </section>
+
+
+</div>

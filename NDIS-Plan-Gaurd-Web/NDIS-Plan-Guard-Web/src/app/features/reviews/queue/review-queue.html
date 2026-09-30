@@ -1,0 +1,77 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">SCREEN 9</div>
+      <h1>Review queue</h1>
+      <p>Submitted claims waiting for a human reviewer, including claims already in progress.</p>
+    </div>
+    <button class="btn btn-secondary" type="button" (click)="load()">Refresh</button>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  <article class="card">
+    <div class="card-header">
+      <h2>Claims requiring review</h2>
+      <input
+        class="search-input"
+        placeholder="Search claim, provider or participant"
+        [value]="search()"
+        (input)="search.set($any($event.target).value)"
+      />
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Claim</th>
+            <th>Provider</th>
+            <th>Participant</th>
+            <th>Service</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (claim of filtered(); track claim.claimId) {
+            <tr>
+              <td>
+                <strong>{{ claim.claimNumber }}</strong>
+                <small>Submitted {{ claim.submittedAtUtc ? (claim.submittedAtUtc | date:'medium') : '—' }}</small>
+              </td>
+              <td>{{ claim.serviceProviderName }}</td>
+              <td>
+                {{ claim.participantName }}
+                <small>{{ claim.participantNdisNumber }}</small>
+              </td>
+              <td>
+                {{ claim.supportCategory }}
+                <small>{{ claim.serviceFrom | date:'mediumDate' }} – {{ claim.serviceTo | date:'mediumDate' }}</small>
+              </td>
+              <td>{{ claim.amount | currency:'AUD' }}</td>
+              <td><span class="badge">{{ claim.status }}</span></td>
+              <td>
+                <button
+                  class="btn btn-primary btn-small"
+                  type="button"
+                  [disabled]="startingId() === claim.claimId"
+                  (click)="open(claim)"
+                >
+                  {{ startingId() === claim.claimId ? 'Opening…' : (claim.status === 'Processing' ? 'Continue' : 'Start review') }}
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7">{{ loading() ? 'Loading review queue…' : 'No claims currently require review.' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>

@@ -1,0 +1,48 @@
+<div class="shell">
+  <header class="topbar">
+    <a class="brand" routerLink="/dashboard">
+      <span class="brand-mark">N</span>
+      <span><strong>NDIS Plan Guard</strong><small>Decision Support</small></span>
+    </a>
+
+    <div class="user-block">
+      <span class="user-copy">
+        <strong>{{ auth.displayName() }}</strong>
+        <small>{{ auth.roles().join(' · ') }}</small>
+      </span>
+      <button type="button" class="btn btn-ghost btn-small" (click)="auth.logout()">Sign out</button>
+    </div>
+  </header>
+
+  <div class="shell-body">
+    <aside class="sidebar">
+      <nav class="nav-list">
+        @if (auth.hasAnyRole(['ServiceProvider', 'Admin', 'Reviewer', 'SuperAdmin'])) {
+          <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+        }
+        @if (auth.hasAnyRole(['SuperAdmin'])) {
+          <a routerLink="/super-admin" routerLinkActive="active">Super Admin</a>
+        }
+        @if (auth.hasAnyRole(['Admin', 'SuperAdmin'])) {
+          <a routerLink="/admin" routerLinkActive="active">Registrations</a>
+          <a routerLink="/budget-plan-templates" routerLinkActive="active">Plan Templates</a>
+        }
+        @if (auth.hasAnyRole(['ServiceProvider'])) {
+          <a routerLink="/service-provider" routerLinkActive="active">Provider Profile</a>
+          <a routerLink="/participants" routerLinkActive="active">Participants</a>
+        }
+        @if (auth.hasAnyRole(['ServiceProvider', 'Admin', 'Reviewer', 'SuperAdmin'])) {
+          <a routerLink="/claims" routerLinkActive="active">Claims</a>
+          <a routerLink="/audit" routerLinkActive="active">Activity</a>
+        }
+        @if (auth.hasAnyRole(['Reviewer', 'Admin', 'SuperAdmin'])) {
+          <a routerLink="/reviews" routerLinkActive="active">Review Queue</a>
+        }
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

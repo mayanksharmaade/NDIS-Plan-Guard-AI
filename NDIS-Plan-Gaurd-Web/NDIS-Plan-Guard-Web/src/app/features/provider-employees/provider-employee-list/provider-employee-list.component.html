@@ -1,0 +1,145 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <a routerLink="/service-provider" class="back-link">← Provider profile</a>
+      <div class="eyebrow">SERVICE PROVIDER</div>
+      <h1>Employees & support workers</h1>
+      <p>Add the people who can be assigned to participants and record delivered supports.</p>
+    </div>
+
+    <button class="btn btn-secondary" type="button" (click)="reset()">
+      New employee
+    </button>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  @if (message()) {
+    <div class="alert alert-success">{{ message() }}</div>
+  }
+
+  <div class="two-column employee-layout">
+    <article class="card">
+      <h2>{{ editingId() ? 'Edit employee' : 'Add employee' }}</h2>
+
+      <form class="stack" [formGroup]="form" (ngSubmit)="save()">
+        <label>
+          Employee number
+          <input type="text" maxlength="50" formControlName="employeeNumber" placeholder="e.g. EMP-001" />
+        </label>
+
+        <div class="form-grid compact">
+          <label>
+            First name
+            <input type="text" maxlength="100" formControlName="firstName" />
+          </label>
+
+          <label>
+            Last name
+            <input type="text" maxlength="100" formControlName="lastName" />
+          </label>
+        </div>
+
+        <label>
+          Email
+          <input type="email" maxlength="250" formControlName="email" />
+        </label>
+
+        <label>
+          Phone
+          <input type="tel" maxlength="30" formControlName="phone" />
+        </label>
+
+        <label>
+          Role
+          <select formControlName="role">
+            @for (role of roles; track role.value) {
+              <option [value]="role.value">{{ role.label }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          Qualifications
+          <textarea rows="3" maxlength="500" formControlName="qualifications" placeholder="Optional qualifications or notes"></textarea>
+        </label>
+
+        <label>
+          Employee pay rate (AUD/hour)
+          <input type="number" min="0" step="0.01" formControlName="defaultHourlyRate" placeholder="Required" />
+        </label>
+
+        <div class="actions-row">
+          <button class="btn btn-primary" type="submit" [disabled]="saving()">
+            {{ saving() ? 'Saving…' : (editingId() ? 'Save changes' : 'Add employee') }}
+          </button>
+
+          @if (editingId()) {
+            <button class="btn btn-secondary" type="button" (click)="reset()">Cancel</button>
+          }
+        </div>
+      </form>
+    </article>
+
+    <article class="card card-wide">
+      <div class="card-header">
+        <h2>Employee list</h2>
+        <input
+          class="search-input"
+          placeholder="Search employee"
+          [value]="search()"
+          (input)="search.set($any($event.target).value)" />
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Employee #</th>
+              <th>Role</th>
+              <th>Employee pay rate</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (employee of filtered(); track employee.id) {
+              <tr>
+                <td>
+                  <strong>{{ employee.firstName }} {{ employee.lastName }}</strong>
+                  <small>{{ employee.email }}</small>
+                </td>
+                <td>{{ employee.employeeNumber }}</td>
+                <td>{{ employee.role }}</td>
+                <td>
+                  {{ employee.defaultHourlyRate == null ? '—' : (employee.defaultHourlyRate | currency:'AUD') }}
+                </td>
+                <td>
+                  <span class="badge">{{ employee.isActive ? 'Active' : 'Inactive' }}</span>
+                </td>
+                <td class="actions-cell">
+                  <button class="btn btn-secondary btn-small" type="button" (click)="edit(employee)">Edit</button>
+                  <button
+                    class="btn btn-small"
+                    [class.btn-danger]="employee.isActive"
+                    [class.btn-secondary]="!employee.isActive"
+                    type="button"
+                    (click)="toggle(employee)">
+                    {{ employee.isActive ? 'Deactivate' : 'Activate' }}
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="6">{{ loading() ? 'Loading…' : 'No employees have been added.' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </div>
+</section>

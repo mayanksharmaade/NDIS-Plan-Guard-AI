@@ -1,0 +1,13 @@
+{
+  "random_seed": 42,
+  "claim_count": 15000,
+  "participant_count": 1200,
+  "provider_count": 220,
+  "start_date": "2025-01-01",
+  "end_date": "2026-08-31",
+  "dataset_version": "claim-risk-training-v2",
+  "feature_version": "risk-features-v2",
+  "target_column": "risk_label",
+  "expected_positive_rate_min": 0.10,
+  "expected_positive_rate_max": 0.30
+}

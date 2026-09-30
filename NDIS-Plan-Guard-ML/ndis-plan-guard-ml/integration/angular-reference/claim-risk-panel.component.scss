@@ -1,0 +1,38 @@
+.risk-panel {
+  border: 1px solid #d8dde6;
+  border-radius: 12px;
+  padding: 1rem;
+  background: #fff;
+}
+
+header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+h3, h4 { margin: 0.25rem 0 0.75rem; }
+
+.risk-score {
+  display: grid;
+  text-align: right;
+}
+
+ul { padding-left: 1.2rem; }
+li { margin-bottom: 0.6rem; }
+li span, li small { display: block; }
+
+.notice {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e6e9ef;
+  font-size: 0.9rem;
+}

@@ -1,0 +1,106 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <a routerLink="/participants" class="back-link">← Participants</a>
+      <div class="eyebrow">PARTICIPANT BUDGET</div>
+      <h1>Budget plans</h1>
+      <p>
+        @if (participant()) {
+          {{ participant()!.firstName }} {{ participant()!.lastName }} — {{ participant()!.ndisNumber }}
+        } @else {
+          Select an approved plan template and set the participant plan period.
+        }
+      </p>
+    </div>
+  </div>
+
+  @if (error()) { <div class="alert alert-error">{{ error() }}</div> }
+  @if (message()) { <div class="alert alert-success">{{ message() }}</div> }
+
+  <div class="budget-layout">
+    <article class="card">
+      <h2>Assign plan</h2>
+      <form class="stack" [formGroup]="planForm" (ngSubmit)="createPlan()">
+        <label>
+          Plan template
+          <select formControlName="budgetPlanTemplateId">
+            <option value="">Select plan</option>
+            @for (template of templates(); track template.id) {
+              <option [value]="template.id">{{ template.planName }}</option>
+            }
+          </select>
+        </label>
+
+        @if (selectedTemplate(); as template) {
+          <div class="template-summary">
+            <div>
+              <span>Budget basis</span>
+              <strong>{{ template.budgetType === 'Fortnightly' ? 'Fortnight budget' : 'Total plan budget' }}</strong>
+            </div>
+            <div>
+              <span>{{ template.budgetType === 'Fortnightly' ? 'Fortnight amount' : 'Total amount' }}</span>
+              <strong>{{ template.amount | currency:'AUD' }}</strong>
+            </div>
+          </div>
+          <small>The amount comes from the approved template and cannot be changed by the Service Provider.</small>
+        }
+
+        <div class="form-grid compact">
+          <label>
+            Start date
+            <input type="date" formControlName="startDate" />
+          </label>
+          <label>
+            End date
+            <input type="date" formControlName="endDate" />
+          </label>
+        </div>
+
+        <label>
+          Status
+          <select formControlName="status">
+            <option value="Active">Active</option>
+            <option value="Draft">Draft</option>
+          </select>
+        </label>
+
+        <button class="btn btn-primary" type="submit" [disabled]="savingPlan() || templates().length === 0">
+          {{ savingPlan() ? 'Creating…' : 'Create participant plan' }}
+        </button>
+
+        @if (templates().length === 0) {
+          <small>No active plan templates are available. An Admin/Super Admin must create one first.</small>
+        }
+      </form>
+    </article>
+
+    <div class="plan-stack">
+      @if (loading()) { <article class="card">Loading budget plans…</article> }
+
+      @for (plan of plans(); track plan.id) {
+        <article class="card plan-card">
+          <div class="card-header">
+            <div>
+              <h2>{{ plan.planName }}</h2>
+              <small>{{ plan.startDate | date:'mediumDate' }} – {{ plan.endDate | date:'mediumDate' }}</small>
+            </div>
+            <span class="badge">{{ plan.status }}</span>
+          </div>
+
+          <div class="metrics plan-metrics">
+            <div>
+              <span>Budget basis</span>
+              <strong>{{ plan.budgetType === 'Fortnightly' ? 'Fortnight' : 'Total plan' }}</strong>
+            </div>
+            <div>
+              <span>{{ plan.budgetType === 'Fortnightly' ? 'Fortnight amount' : 'Total amount' }}</span>
+              <strong>{{ plan.amount | currency:'AUD' }}</strong>
+            </div>
+          </div>
+        </article>
+      } @empty {
+        @if (!loading()) { <article class="card">No budget plans have been assigned to this participant.</article> }
+      }
+    </div>
+  </div>
+</section>

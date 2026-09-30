@@ -1,0 +1,768 @@
+<section class="page">
+
+
+  <!-- ==================================================== -->
+  <!-- PAGE HEADER                                          -->
+  <!-- ==================================================== -->
+
+  <div class="page-header">
+
+    <div>
+
+      <a
+        routerLink="/reviews"
+        class="back-link">
+        ← Review queue
+      </a>
+
+
+      <div class="eyebrow">
+        SCREEN 10
+      </div>
+
+
+      <h1>
+        Claim review &amp; decision
+      </h1>
+
+
+      <p>
+        Review the claim details,
+        validation findings and ML risk
+        indicators before recording the
+        final human decision.
+      </p>
+
+    </div>
+
+
+    @if (claim(); as c) {
+
+      <a
+        class="btn btn-secondary"
+        routerLink="/audit"
+        [queryParams]="{
+          entityType: 'Claim',
+          entityId: c.claimId
+        }">
+
+        Claim activity
+
+      </a>
+
+    }
+
+  </div>
+
+
+  <!-- ==================================================== -->
+  <!-- PAGE MESSAGES                                        -->
+  <!-- ==================================================== -->
+
+  @if (error()) {
+
+    <div class="alert alert-error">
+      {{ error() }}
+    </div>
+
+  }
+
+
+  @if (message()) {
+
+    <div class="alert alert-success">
+      {{ message() }}
+    </div>
+
+  }
+
+
+  <!-- ==================================================== -->
+  <!-- CLAIM                                                -->
+  <!-- ==================================================== -->
+
+  @if (claim(); as c) {
+
+
+    <!-- ================================================== -->
+    <!-- SUMMARY BOXES                                      -->
+    <!-- ================================================== -->
+
+    <div class="summary-strip">
+
+
+      <span>
+
+        Claim
+
+        <strong>
+          {{ c.claimNumber }}
+        </strong>
+
+      </span>
+
+
+      <span>
+
+        Status
+
+        <strong>
+          {{ c.status }}
+        </strong>
+
+      </span>
+
+
+      <span>
+
+        Amount
+
+        <strong>
+          {{
+            c.amount
+            | currency:'AUD'
+          }}
+        </strong>
+
+      </span>
+
+
+      <span>
+
+        Provider
+
+        <strong>
+          {{ c.serviceProviderName }}
+        </strong>
+
+      </span>
+
+
+      <!-- ================================================ -->
+      <!-- NEW: RISK SCORE                                  -->
+      <!-- ================================================ -->
+
+      @if (decisionSupport(); as ds) {
+
+        <span>
+
+          Risk score
+
+          <strong>
+
+            @if (
+              ds.mlRisk?.score !== undefined
+              &&
+              ds.mlRisk?.score !== null
+            ) {
+
+              {{ ds.mlRisk?.score }} / 100
+
+            } @else {
+
+              —
+
+            }
+
+          </strong>
+
+        </span>
+
+
+        <!-- ============================================== -->
+        <!-- NEW: RISK BAND                                 -->
+        <!-- ============================================== -->
+
+        <span>
+
+          Risk
+
+          <strong>
+            {{
+              ds.mlRisk?.riskBand
+              || 'Unavailable'
+            }}
+          </strong>
+
+        </span>
+
+      }
+
+    </div>
+
+
+    <!-- ================================================== -->
+    <!-- RISK ERROR                                         -->
+    <!-- ================================================== -->
+
+    @if (riskError()) {
+
+      <div class="alert alert-error">
+
+        {{ riskError() }}
+
+      </div>
+
+    }
+
+
+    <div class="review-layout">
+
+
+      <!-- ================================================= -->
+      <!-- LEFT SIDE                                         -->
+      <!-- ================================================= -->
+
+      <div class="stack">
+
+
+        <!-- =============================================== -->
+        <!-- CLAIM DETAILS                                   -->
+        <!-- =============================================== -->
+
+        <article class="card detail-grid">
+
+
+          <div>
+
+            <small>
+              Participant
+            </small>
+
+            <strong>
+              {{ c.participantName }}
+            </strong>
+
+            <span>
+              {{ c.participantNdisNumber }}
+            </span>
+
+          </div>
+
+
+          <div>
+
+            <small>
+              Support category
+            </small>
+
+            <strong>
+              {{ c.supportCategory }}
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <small>
+              Service period
+            </small>
+
+            <strong>
+
+              {{
+                c.serviceFrom
+                | date:'mediumDate'
+              }}
+
+              –
+
+              {{
+                c.serviceTo
+                | date:'mediumDate'
+              }}
+
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <small>
+              Submitted
+            </small>
+
+            <strong>
+
+              {{
+                c.submittedAtUtc
+                  ? (
+                      c.submittedAtUtc
+                      | date:'medium'
+                    )
+                  : '—'
+              }}
+
+            </strong>
+
+          </div>
+
+
+          <div class="span-2">
+
+            <small>
+              Description
+            </small>
+
+            <p>
+              {{ c.description }}
+            </p>
+
+          </div>
+
+        </article>
+
+
+        @if (decisionSupport(); as ds) {
+          <article class="card detail-grid">
+            <div>
+              <small>Support worker</small>
+              <strong>{{ ds.service.employeeName || '—' }}</strong>
+            </div>
+            <div>
+              <small>Recorded deliveries</small>
+              <strong>{{ ds.service.deliveryCount }}</strong>
+            </div>
+            <div>
+              <small>Support hours</small>
+              <strong>{{ ds.service.serviceHours ?? '—' }}</strong>
+            </div>
+            <div>
+              <small>Agreed billing rate</small>
+              <strong>{{ ds.service.claimedHourlyRate !== undefined && ds.service.claimedHourlyRate !== null ? (ds.service.claimedHourlyRate | currency:'AUD') : '—' }}</strong>
+            </div>
+            <div>
+              <small>Employee pay rate</small>
+              <strong>{{ ds.service.employeePayRate !== undefined && ds.service.employeePayRate !== null ? (ds.service.employeePayRate | currency:'AUD') : '—' }}</strong>
+            </div>
+            <div>
+              <small>Expected service cost</small>
+              <strong>{{ ds.service.expectedServiceCost !== undefined && ds.service.expectedServiceCost !== null ? (ds.service.expectedServiceCost | currency:'AUD') : '—' }}</strong>
+            </div>
+            <div>
+              <small>Fortnight allocation</small>
+              <strong>{{ ds.budget.fortnightBudget !== undefined && ds.budget.fortnightBudget !== null ? (ds.budget.fortnightBudget | currency:'AUD') : 'Not fortnight based' }}</strong>
+            </div>
+            <div>
+              <small>Fortnight remaining before claim</small>
+              <strong>{{ ds.budget.fortnightRemainingBefore !== undefined && ds.budget.fortnightRemainingBefore !== null ? (ds.budget.fortnightRemainingBefore | currency:'AUD') : '—' }}</strong>
+            </div>
+          </article>
+        }
+
+
+        <!-- =============================================== -->
+        <!-- NEW: RISK REASONS                               -->
+        <!-- =============================================== -->
+
+        @if (decisionSupport(); as ds) {
+
+          <article class="card">
+
+            <h2>
+              Risk reasons
+            </h2>
+
+
+            <!-- =========================================== -->
+            <!-- ML UNAVAILABLE                              -->
+            <!-- =========================================== -->
+
+            @if (
+              ds.mlRisk
+              &&
+              !ds.mlRisk.available
+            ) {
+
+              <div class="alert alert-error">
+
+                <strong>
+                  ML risk scoring unavailable.
+                </strong>
+
+                <p>
+                  {{
+                    ds.mlRisk.failureReason
+                    ||
+                    'No failure reason was supplied.'
+                  }}
+                </p>
+
+              </div>
+
+            }
+
+
+            <!-- =========================================== -->
+            <!-- VALIDATION FINDINGS                         -->
+            <!-- =========================================== -->
+
+            @if (ds.findings.length > 0) {
+
+              <div class="history-list">
+
+                @for (
+                  finding of ds.findings;
+                  track finding.code
+                ) {
+
+                  <div class="history-item">
+
+                    <div>
+
+                      <strong>
+                        {{ finding.title }}
+                      </strong>
+
+                      <small>
+                        {{ finding.severity }}
+                      </small>
+
+                    </div>
+
+
+                    <p>
+                      {{ finding.description }}
+                    </p>
+
+
+                    @if (finding.evidence) {
+
+                      <small>
+                        {{ finding.evidence }}
+                      </small>
+
+                    }
+
+                  </div>
+
+                }
+
+              </div>
+
+            }
+
+
+            <!-- =========================================== -->
+            <!-- ML FACTORS                                  -->
+            <!-- =========================================== -->
+
+            @if (
+              ds.mlRisk?.available
+              &&
+              ds.mlRisk?.factors
+              &&
+              ds.mlRisk?.factors?.length
+            ) {
+
+              <h3 class="risk-subtitle">
+                ML contributing factors
+              </h3>
+
+
+              <div class="history-list">
+
+                @for (
+                  factor of ds.mlRisk?.factors ?? [];
+                  track factor.feature
+                ) {
+
+                  <div class="history-item">
+
+                    <div>
+
+                      <strong>
+                        {{ factor.description }}
+                      </strong>
+
+                    </div>
+
+                  </div>
+
+                }
+
+              </div>
+
+            }
+
+
+            <!-- =========================================== -->
+            <!-- NOTHING FLAGGED                             -->
+            <!-- =========================================== -->
+
+            @if (
+              ds.findings.length === 0
+              &&
+              (
+                !ds.mlRisk?.factors
+                ||
+                ds.mlRisk?.factors?.length === 0
+              )
+            ) {
+
+              <p>
+                No validation findings or ML
+                contributing factors were returned
+                for this claim.
+              </p>
+
+            }
+
+
+            <!-- =========================================== -->
+            <!-- MODEL INFORMATION                           -->
+            <!-- =========================================== -->
+
+            @if (ds.mlRisk?.available) {
+
+              <p class="decision-note">
+
+                Model:
+
+                <strong>
+                  {{
+                    ds.mlRisk?.modelVersion
+                    || 'Unknown'
+                  }}
+                </strong>
+
+                ·
+
+                Feature version:
+
+                <strong>
+                  {{
+                    ds.mlRisk?.featureVersion
+                    || 'Unknown'
+                  }}
+                </strong>
+
+              </p>
+
+            }
+
+          </article>
+
+        }
+
+
+        <!-- =============================================== -->
+        <!-- REVIEW HISTORY                                  -->
+        <!-- =============================================== -->
+
+        <article class="card">
+
+          <h2>
+            Review history
+          </h2>
+
+
+          <div class="history-list">
+
+            @for (
+              review of c.reviews;
+              track review.id
+            ) {
+
+              <div class="history-item">
+
+                <div>
+
+                  <strong>
+                    {{ review.outcome }}
+                  </strong>
+
+
+                  <small>
+
+                    {{ review.reviewerEmail }}
+
+                    ·
+
+                    {{
+                      review.reviewedAtUtc
+                      | date:'medium'
+                    }}
+
+                  </small>
+
+                </div>
+
+
+                <p>
+
+                  {{
+                    review.comments
+                    ||
+                    'No comments recorded.'
+                  }}
+
+                </p>
+
+              </div>
+
+            } @empty {
+
+              <p>
+                No previous decisions have been
+                recorded for this claim.
+              </p>
+
+            }
+
+          </div>
+
+        </article>
+
+      </div>
+
+
+      <!-- ================================================= -->
+      <!-- RIGHT SIDE: HUMAN DECISION                        -->
+      <!-- ================================================= -->
+
+      <aside class="card decision-card">
+
+        <h2>
+          Human review decision
+        </h2>
+
+
+        @if (
+          c.status === 'Submitted'
+          ||
+          c.status === 'ReviewRequired'
+        ) {
+
+          <p>
+            This claim must enter processing
+            before a decision can be recorded.
+          </p>
+
+
+          <button
+            class="btn btn-primary btn-wide"
+            type="button"
+            [disabled]="starting()"
+            (click)="startReview()">
+
+            {{
+              starting()
+                ? 'Starting…'
+                : 'Start review'
+            }}
+
+          </button>
+
+
+        } @else if (
+          c.status === 'Processing'
+        ) {
+
+
+          <form
+            class="stack"
+            [formGroup]="form"
+            (ngSubmit)="recordDecision()">
+
+
+            <label>
+
+              Decision
+
+
+              <select
+                formControlName="decision">
+
+                <option value="Approved">
+                  Approve
+                </option>
+
+                <option value="Rejected">
+                  Reject
+                </option>
+
+                <option value="MoreInformationRequired">
+                  Request more information
+                </option>
+
+              </select>
+
+            </label>
+
+
+            <label>
+
+              Reviewer comments
+
+
+              <textarea
+                rows="7"
+                maxlength="1000"
+                formControlName="comments"
+                placeholder="Explain the decision or information required">
+              </textarea>
+
+            </label>
+
+
+            <p class="decision-note">
+
+              Comments are mandatory for
+              rejection and requests for more
+              information.
+
+            </p>
+
+
+            <button
+              class="btn btn-primary btn-wide"
+              type="submit"
+              [disabled]="deciding()">
+
+              {{
+                deciding()
+                  ? 'Recording…'
+                  : 'Record decision'
+              }}
+
+            </button>
+
+          </form>
+
+
+        } @else {
+
+
+          <div class="decision-complete">
+
+            <strong>
+              Review completed
+            </strong>
+
+            <p>
+              The current claim status is
+              {{ c.status }}.
+            </p>
+
+          </div>
+
+        }
+
+      </aside>
+
+    </div>
+
+
+  } @else if (loading()) {
+
+
+    <div class="card">
+      Loading review…
+    </div>
+
+  }
+
+</section>

@@ -1,0 +1,32 @@
+<section class="page">
+  <div class="page-header"><div><div class="eyebrow">SCREEN 3</div><h1>Super Admin</h1><p>Manage administrators and application user status.</p></div></div>
+  @if (error()) { <div class="alert alert-error">{{ error() }}</div> }
+  @if (message()) { <div class="alert alert-success">{{ message() }}</div> }
+
+  <div class="two-column">
+    <article class="card">
+      <h2>Create Admin</h2>
+      <form [formGroup]="form" (ngSubmit)="createAdmin()" class="stack">
+        <label>First name<input formControlName="firstName" /></label>
+        <label>Last name<input formControlName="lastName" /></label>
+        <label>Email<input type="email" formControlName="email" /></label>
+        <label>Password<input type="password" formControlName="password" /></label>
+        <label>Phone<input formControlName="phoneNumber" /></label>
+        <button class="btn btn-primary" type="submit">Create Admin</button>
+      </form>
+    </article>
+
+    <article class="card card-wide">
+      <div class="card-header"><h2>Users</h2><button class="btn btn-secondary btn-small" type="button" (click)="loadUsers()">Refresh</button></div>
+      <div class="table-wrap">
+        <table><thead><tr><th>User</th><th>Roles</th><th>Approval</th><th>Account</th><th></th></tr></thead>
+          <tbody>
+            @for (user of users(); track user.userProfileId) {
+              <tr><td><strong>{{ user.firstName }} {{ user.lastName }}</strong><small>{{ user.email }}</small></td><td>{{ user.roles.join(', ') }}</td><td><span class="badge">{{ user.approvalStatus }}</span></td><td><span class="badge">{{ user.accountStatus }}</span></td><td class="actions-cell"><button class="btn btn-secondary btn-small" (click)="setActive(user, true)">Activate</button><button class="btn btn-danger btn-small" (click)="setActive(user, false)">Disable</button></td></tr>
+            } @empty { <tr><td colspan="5">{{ loading() ? 'Loading…' : 'No users found.' }}</td></tr> }
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </div>
+</section>

@@ -1,0 +1,14 @@
+{
+  "rows": 15000,
+  "columns": 32,
+  "duplicate_claim_ids": 0,
+  "positive_rate": 0.1468,
+  "missing_values": {
+    "participant_avg_claim_prior": 1172,
+    "provider_avg_claim_prior": 218,
+    "days_since_participant_previous_claim": 1172
+  },
+  "validation_passed": true,
+  "errors": [],
+  "warnings": []
+}

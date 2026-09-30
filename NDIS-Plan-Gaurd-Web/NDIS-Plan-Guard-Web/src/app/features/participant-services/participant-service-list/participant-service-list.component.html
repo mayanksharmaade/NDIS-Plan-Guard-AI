@@ -1,0 +1,187 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <a routerLink="/participants" class="back-link">← Participants</a>
+      <div class="eyebrow">PARTICIPANT SERVICES</div>
+      <h1>Assignments & service delivery</h1>
+      <p>
+        @if (participant()) {
+          {{ participant()!.firstName }} {{ participant()!.lastName }} — {{ participant()!.ndisNumber }}
+        } @else {
+          Assign provider employees and record the supports actually delivered.
+        }
+      </p>
+    </div>
+  </div>
+
+  @if (error()) { <div class="alert alert-error">{{ error() }}</div> }
+  @if (message()) { <div class="alert alert-success">{{ message() }}</div> }
+
+  @if (loading()) {
+    <article class="card">Loading participant services…</article>
+  } @else {
+    <div class="service-grid">
+      <article class="card">
+        <h2>Assign support worker</h2>
+        <p class="muted-copy">Employee pay rate is the provider's internal labour cost. The agreed participant billing rate is what service deliveries and claims use.</p>
+
+        <form class="stack" [formGroup]="assignmentForm" (ngSubmit)="assignEmployee()">
+          <label>
+            Employee / support worker
+            <select formControlName="serviceProviderEmployeeId">
+              <option value="">Select employee</option>
+              @for (employee of activeEmployees(); track employee.id) {
+                <option [value]="employee.id">
+                  {{ employee.firstName }} {{ employee.lastName }} — {{ employee.role }}
+                </option>
+              }
+            </select>
+          </label>
+
+          @if (selectedEmployee(); as employee) {
+            <div class="rate-summary">
+              <span>Employee pay rate</span>
+              <strong>{{ employee.defaultHourlyRate == null ? 'Not set' : (employee.defaultHourlyRate | currency:'AUD') + '/hr' }}</strong>
+            </div>
+          }
+
+          <label>
+            NDIS service
+            <select formControlName="supportCategory">
+              <option value="">Select service</option>
+              @for (serviceOption of supportServices; track serviceOption.code) {
+                <option [value]="serviceOption.code">{{ serviceOption.name }}</option>
+              }
+            </select>
+          </label>
+
+          <div class="form-grid compact">
+            <label>
+              Start date
+              <input type="date" formControlName="startDate" />
+            </label>
+            <label>
+              End date
+              <input type="date" formControlName="endDate" />
+            </label>
+          </div>
+
+          <label>
+            Agreed participant billing rate (AUD/hour)
+            <input type="number" min="0.01" step="0.01" formControlName="agreedHourlyRate" />
+            <small>This rate is captured on each service delivery and used to calculate the claim.</small>
+          </label>
+
+          <button class="btn btn-primary" type="submit" [disabled]="savingAssignment() || activeEmployees().length === 0">
+            {{ savingAssignment() ? 'Assigning…' : 'Assign employee' }}
+          </button>
+
+          @if (activeEmployees().length === 0) {
+            <small>No active provider employees are available. Add or activate an employee first.</small>
+          }
+        </form>
+      </article>
+
+      <article class="card">
+        <h2>Record service delivery</h2>
+        <p class="muted-copy">Choose the participant assignment. Employee, service and billing rate are taken from that approved mapping.</p>
+
+        <form class="stack" [formGroup]="deliveryForm" (ngSubmit)="recordDelivery()">
+          <label>
+            Active assignment
+            <select formControlName="participantServiceAssignmentId">
+              <option value="">Select assignment</option>
+              @for (assignment of activeAssignments(); track assignment.id) {
+                <option [value]="assignment.id">
+                  {{ assignment.employeeName }} — {{ supportName(assignment.supportCategory) }}
+                </option>
+              }
+            </select>
+          </label>
+
+          @if (selectedAssignment(); as assignment) {
+            <div class="assignment-summary">
+              <div><span>Support worker</span><strong>{{ assignment.employeeName }}</strong></div>
+              <div><span>Service</span><strong>{{ supportName(assignment.supportCategory) }}</strong></div>
+              <div><span>Agreed billing rate</span><strong>{{ assignment.agreedHourlyRate | currency:'AUD' }}/hr</strong></div>
+            </div>
+          }
+
+          <div class="form-grid compact">
+            <label>
+              Service start
+              <input type="datetime-local" formControlName="serviceStartLocal" />
+            </label>
+            <label>
+              Service end
+              <input type="datetime-local" formControlName="serviceEndLocal" />
+            </label>
+          </div>
+
+          <label>
+            Service location
+            <input type="text" maxlength="300" formControlName="serviceLocation" placeholder="Optional location" />
+          </label>
+
+          <label>
+            Notes
+            <textarea rows="3" maxlength="1000" formControlName="notes" placeholder="Optional service notes"></textarea>
+          </label>
+
+          <button class="btn btn-primary" type="submit" [disabled]="savingDelivery() || activeAssignments().length === 0">
+            {{ savingDelivery() ? 'Recording…' : 'Record delivery' }}
+          </button>
+        </form>
+      </article>
+    </div>
+
+    <div class="service-list-grid">
+      <article class="card card-wide">
+        <div class="card-header"><h2>Current assignments</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Employee</th><th>Service</th><th>Period</th><th>Employee pay</th><th>Billing rate</th><th>Status</th></tr></thead>
+            <tbody>
+              @for (assignment of assignments(); track assignment.id) {
+                <tr>
+                  <td><strong>{{ assignment.employeeName }}</strong><small>{{ assignment.providerName }}</small></td>
+                  <td>{{ supportName(assignment.supportCategory) }}</td>
+                  <td>{{ assignment.startDate | date:'mediumDate' }}<small>to {{ assignment.endDate ? (assignment.endDate | date:'mediumDate') : 'ongoing' }}</small></td>
+                  <td>{{ assignment.employeePayRate == null ? '—' : (assignment.employeePayRate | currency:'AUD') }}</td>
+                  <td><strong>{{ assignment.agreedHourlyRate == null ? '—' : (assignment.agreedHourlyRate | currency:'AUD') }}</strong></td>
+                  <td><span class="badge">{{ assignment.isActive ? 'Active' : 'Inactive' }}</span></td>
+                </tr>
+              } @empty {
+                <tr><td colspan="6">No employee assignments have been created.</td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="card card-wide">
+        <div class="card-header"><h2>Service delivery history</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Employee</th><th>Service</th><th>Service window</th><th>Hours</th><th>Billing rate</th><th>Amount</th><th>Claimed</th></tr></thead>
+            <tbody>
+              @for (delivery of deliveries(); track delivery.id) {
+                <tr>
+                  <td><strong>{{ delivery.employeeName }}</strong><small>{{ delivery.providerName }}</small></td>
+                  <td>{{ supportName(delivery.supportCategory) }}</td>
+                  <td>{{ delivery.serviceStartUtc | date:'medium' }}<small>to {{ delivery.serviceEndUtc | date:'medium' }}</small></td>
+                  <td>{{ delivery.serviceHours }}</td>
+                  <td>{{ delivery.hourlyRate | currency:'AUD' }}</td>
+                  <td><strong>{{ delivery.amount | currency:'AUD' }}</strong></td>
+                  <td><span class="badge">{{ delivery.isClaimed ? 'Claimed' : 'Available' }}</span></td>
+                </tr>
+              } @empty {
+                <tr><td colspan="7">No service deliveries have been recorded.</td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </div>
+  }
+</section>

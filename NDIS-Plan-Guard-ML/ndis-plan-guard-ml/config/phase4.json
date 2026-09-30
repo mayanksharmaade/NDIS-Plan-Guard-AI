@@ -1,0 +1,19 @@
+{
+  "dataset_path": "data/synthetic/claim-risk-training-v1.csv",
+  "dataset_version": "claim-risk-training-v1",
+  "feature_version": "risk-features-v1",
+  "model_version": "risk-model-v1",
+  "random_seed": 42,
+  "train_fraction": 0.70,
+  "validation_fraction": 0.15,
+  "test_fraction": 0.15,
+  "minimum_high_risk_recall": 0.70,
+  "threshold_min": 0.20,
+  "threshold_max": 0.80,
+  "threshold_step": 0.01,
+  "low_risk_threshold_ratio": 0.55,
+  "top_explanation_factors": 5,
+  "model_artifact_path": "models/risk-model-v1.joblib",
+  "model_metadata_path": "models/risk-model-v1.metadata.json",
+  "selection_metric": "pr_auc"
+}

@@ -1,0 +1,133 @@
+<section class="page narrow-page">
+  <div class="page-header">
+    <div>
+      <a routerLink="/claims" class="back-link">← Claims</a>
+      <div class="eyebrow">SCREEN 8</div>
+      <h1>{{ isEdit ? 'Edit claim' : 'Create claim from delivered supports' }}</h1>
+      <p>{{ isEdit ? 'Review the saved claim.' : 'Select the participant and period, then claim only recorded, unclaimed service deliveries.' }}</p>
+    </div>
+  </div>
+
+  @if (error()) { <div class="alert alert-error">{{ error() }}</div> }
+  @if (message()) { <div class="alert alert-success">{{ message() }}</div> }
+
+  <article class="card">
+    @if (loading()) {
+      <p>Loading claim information…</p>
+    } @else if (!isEdit) {
+      <form class="stack" [formGroup]="form" (ngSubmit)="save()">
+        <div class="form-grid">
+          <label class="span-2">
+            Participant
+            <select formControlName="participantId">
+              <option value="">Select participant</option>
+              @for (participant of participants(); track participant.id) {
+                <option [value]="participant.id">{{ participant.firstName }} {{ participant.lastName }} — {{ participant.ndisNumber }}</option>
+              }
+            </select>
+          </label>
+
+          <label>
+            Fortnight / period from
+            <input type="date" formControlName="serviceFrom" />
+          </label>
+          <label>
+            To
+            <input type="date" formControlName="serviceTo" />
+          </label>
+
+          <label class="span-2">
+            NDIS service
+            <select formControlName="supportCategory">
+              <option value="">Select service</option>
+              @for (serviceOption of supportServices; track serviceOption.code) {
+                <option [value]="serviceOption.code">{{ serviceOption.name }}</option>
+              }
+            </select>
+          </label>
+        </div>
+
+        <button class="btn btn-secondary" type="button" (click)="loadEligibleDeliveries()" [disabled]="loadingDeliveries()">
+          {{ loadingDeliveries() ? 'Loading services…' : 'Load recorded services' }}
+        </button>
+
+        @if (filteredDeliveries().length > 0) {
+          <div class="delivery-header">
+            <div>
+              <h3>Available recorded services</h3>
+              <small>Only unclaimed deliveries in the selected period are shown.</small>
+            </div>
+            <button class="btn btn-ghost btn-small" type="button" (click)="selectAllVisible()">Select compatible services</button>
+          </div>
+
+          <div class="delivery-list">
+            @for (delivery of filteredDeliveries(); track delivery.id) {
+              <label class="delivery-row">
+                <input
+                  type="checkbox"
+                  [checked]="isSelected(delivery.id)"
+                  (change)="toggleDelivery(delivery, $any($event.target).checked)" />
+                <div>
+                  <strong>{{ delivery.serviceStartUtc | date:'mediumDate' }} — {{ delivery.employeeName }}</strong>
+                  <small>{{ delivery.serviceHours }} hrs × {{ delivery.agreedHourlyRate | currency:'AUD' }}/hr</small>
+                </div>
+                <strong>{{ delivery.amount | currency:'AUD' }}</strong>
+              </label>
+            }
+          </div>
+        }
+
+        @if (selectedDeliveries().length > 0) {
+          <div class="claim-summary-grid">
+            <div><span>Support worker</span><strong>{{ selectedEmployeeName() }}</strong></div>
+            <div><span>Service</span><strong>{{ supportName(selectedDeliveries()[0].supportCategory) }}</strong></div>
+            <div><span>Support hours</span><strong>{{ totalHours() }}</strong></div>
+            <div><span>Agreed billing rate</span><strong>{{ selectedBillingRate() | currency:'AUD' }}/hr</strong></div>
+            <div class="total"><span>Calculated claim amount</span><strong>{{ totalAmount() | currency:'AUD' }}</strong></div>
+          </div>
+          <div class="claim-formula">
+            {{ totalHours() }} hours × {{ selectedBillingRate() | currency:'AUD' }} = <strong>{{ totalAmount() | currency:'AUD' }}</strong>
+          </div>
+        }
+
+        <label>
+          Claim description
+          <textarea rows="4" maxlength="1000" formControlName="description" placeholder="e.g. Fortnightly personal care supports delivered as recorded"></textarea>
+        </label>
+
+        <div class="claim-note">
+          Claim hours, billing rate and amount are calculated by the API from the selected service-delivery evidence. The same delivery cannot be claimed twice.
+        </div>
+
+        <div class="actions-row">
+          <button class="btn btn-primary" type="submit" [disabled]="saving() || selectedDeliveries().length === 0">
+            {{ saving() ? 'Creating…' : 'Create draft claim' }}
+          </button>
+          <a class="btn btn-ghost" routerLink="/claims">Cancel</a>
+        </div>
+      </form>
+    } @else {
+      <form class="stack" [formGroup]="form" (ngSubmit)="save()">
+        <div class="form-grid">
+          <label class="span-2">Participant<input formControlName="participantId" /></label>
+          <label>Service from<input type="date" formControlName="serviceFrom" /></label>
+          <label>Service to<input type="date" formControlName="serviceTo" /></label>
+          <label class="span-2">
+            NDIS service
+            <select formControlName="supportCategory">
+              @for (serviceOption of supportServices; track serviceOption.code) {
+                <option [value]="serviceOption.code">{{ serviceOption.name }}</option>
+              }
+            </select>
+          </label>
+          <label class="span-2">Description<textarea rows="4" formControlName="description"></textarea></label>
+          <label>Amount<input type="number" formControlName="amount" /></label>
+        </div>
+        <div class="actions-row">
+          <button class="btn btn-primary" type="submit" [disabled]="saving() || form.disabled">Save changes</button>
+          <a class="btn btn-ghost" [routerLink]="['/claims', editingId]">Back to claim</a>
+        </div>
+      </form>
+    }
+  </article>
+</section>

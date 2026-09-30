@@ -1,0 +1,27 @@
+{
+  "selected_model": "HistGradientBoosting",
+  "selection_metric": "pr_auc",
+  "minimum_high_risk_recall": 0.7,
+  "recall_qualified_candidates": [
+    "HistGradientBoosting",
+    "LogisticRegression"
+  ],
+  "high_risk_threshold": 0.36000000000000015,
+  "low_risk_threshold": 0.198,
+  "test_metrics": {
+    "threshold": 0.36,
+    "accuracy": 0.547111,
+    "precision": 0.13315,
+    "recall": 0.659091,
+    "f1": 0.221543,
+    "roc_auc": 0.6785,
+    "pr_auc": 0.29873,
+    "confusion_matrix": {
+      "tn": 1086,
+      "fp": 944,
+      "fn": 75,
+      "tp": 145
+    },
+    "predicted_positive_rate": 0.484
+  }
+}

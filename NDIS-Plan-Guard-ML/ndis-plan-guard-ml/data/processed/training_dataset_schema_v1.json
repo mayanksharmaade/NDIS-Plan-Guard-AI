@@ -1,0 +1,40 @@
+{
+  "dataset_version": "claim-risk-training-v1",
+  "feature_version": "risk-features-v1",
+  "target_column": "risk_label",
+  "model_input_columns": [
+    "claim_amount",
+    "units",
+    "unit_price",
+    "service_category",
+    "days_service_to_submission",
+    "plan_total_budget",
+    "plan_remaining_before",
+    "plan_utilisation_before",
+    "claim_to_remaining_ratio",
+    "participant_claims_7d",
+    "participant_claims_30d",
+    "participant_claims_90d",
+    "participant_avg_claim_prior",
+    "claim_to_participant_avg",
+    "provider_claims_7d",
+    "provider_claims_30d",
+    "provider_claims_90d",
+    "provider_avg_claim_prior",
+    "claim_to_provider_avg",
+    "days_since_participant_previous_claim",
+    "validation_finding_count",
+    "validation_high_count",
+    "duplicate_warning",
+    "plan_limit_warning"
+  ],
+  "identifier_columns": [
+    "claim_id",
+    "participant_id",
+    "provider_id"
+  ],
+  "non_model_diagnostic_columns": [
+    "synthetic_risk_probability",
+    "synthetic_anomaly_profile"
+  ]
+}

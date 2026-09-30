@@ -1,0 +1,12 @@
+<section class="page">
+  <div class="page-header"><div><div class="eyebrow">SCREEN 4</div><h1>Pending Registrations</h1><p>Approve or reject Service Provider registrations.</p></div><button class="btn btn-secondary" (click)="load()">Refresh</button></div>
+  @if (error()) { <div class="alert alert-error">{{ error() }}</div> }
+  @if (message()) { <div class="alert alert-success">{{ message() }}</div> }
+  <article class="card">
+    <div class="table-wrap"><table><thead><tr><th>Provider</th><th>Contact</th><th>ABN / NDIS</th><th>Registered</th><th></th></tr></thead><tbody>
+      @for (row of rows(); track row.userProfileId) {
+        <tr><td><strong>{{ row.legalName }}</strong><small>{{ row.tradingName || '—' }}</small></td><td><strong>{{ row.firstName }} {{ row.lastName }}</strong><small>{{ row.email }}</small></td><td>{{ row.abn }}<small>{{ row.ndisRegistrationNumber || 'No registration number' }}</small></td><td>{{ row.registeredAtUtc | date:'mediumDate' }}</td><td class="actions-cell"><button class="btn btn-primary btn-small" (click)="decide(row, true)">Approve</button><button class="btn btn-danger btn-small" (click)="decide(row, false)">Reject</button></td></tr>
+      } @empty { <tr><td colspan="5">{{ loading() ? 'Loading…' : 'No pending registrations.' }}</td></tr> }
+    </tbody></table></div>
+  </article>
+</section>

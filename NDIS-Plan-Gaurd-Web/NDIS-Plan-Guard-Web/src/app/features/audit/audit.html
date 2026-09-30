@@ -1,0 +1,73 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">SCREEN 11</div>
+      <h1>Audit & activity history</h1>
+      <p>Trace claim lifecycle actions, who performed them and when they occurred.</p>
+    </div>
+    <button class="btn btn-secondary" type="button" (click)="load()">Refresh</button>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  <article class="card audit-filters">
+    <label>
+      Entity type
+      <input
+        placeholder="e.g. Claim"
+        [value]="entityType()"
+        (input)="entityType.set($any($event.target).value)"
+      />
+    </label>
+    <label>
+      Entity ID
+      <input
+        placeholder="Optional GUID"
+        [value]="entityId()"
+        (input)="entityId.set($any($event.target).value)"
+      />
+    </label>
+    <label>
+      Search loaded activity
+      <input
+        placeholder="Action, actor or description"
+        [value]="search()"
+        (input)="search.set($any($event.target).value)"
+      />
+    </label>
+    <div class="filter-actions">
+      <button class="btn btn-primary" type="button" (click)="load()">Apply</button>
+      <button class="btn btn-ghost" type="button" (click)="clearFilters()">Clear</button>
+    </div>
+  </article>
+
+  <article class="card activity-card">
+    <div class="card-header">
+      <h2>Activity timeline</h2>
+      <span class="badge">{{ filtered().length }} events</span>
+    </div>
+
+    <div class="activity-list">
+      @for (event of filtered(); track event.id) {
+        <div class="activity-item">
+          <div class="activity-dot"></div>
+          <div class="activity-content">
+            <div class="activity-heading">
+              <div>
+                <strong>{{ event.action }}</strong>
+                <small>{{ event.entityType }} · {{ event.entityId }}</small>
+              </div>
+              <time>{{ event.occurredAtUtc | date:'medium' }}</time>
+            </div>
+            <p>{{ event.description }}</p>
+            <small>Actor: {{ event.actorEmail || 'System / unavailable' }}</small>
+          </div>
+        </div>
+      } @empty {
+        <p>{{ loading() ? 'Loading activity…' : 'No audit events match the current filters.' }}</p>
+      }
+    </div>
+  </article>
+</section>

@@ -1,0 +1,102 @@
+.scope-line {
+  margin-bottom: 14px;
+  color: var(--muted);
+  font-size: .86rem;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.metric-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 28px rgba(35, 69, 86, .05);
+  display: grid;
+  gap: 5px;
+}
+
+.metric-card small {
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-weight: 750;
+}
+
+.metric-card > strong {
+  font-size: 2rem;
+  letter-spacing: -.04em;
+}
+
+.metric-card span {
+  color: var(--muted);
+  font-size: .86rem;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.5fr .7fr;
+  gap: 22px;
+  margin-bottom: 22px;
+}
+
+.workflow-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.workflow-grid div,
+.provider-metrics div {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  display: grid;
+  gap: 5px;
+}
+
+.workflow-grid span,
+.provider-metrics small {
+  color: var(--muted);
+}
+
+.workflow-grid strong,
+.provider-metrics strong {
+  font-size: 1.45rem;
+}
+
+.provider-metrics {
+  display: grid;
+  gap: 12px;
+}
+
+.recent-card {
+  margin-bottom: 20px;
+}
+
+.claim-link {
+  color: var(--primary);
+  font-weight: 750;
+  text-decoration: none;
+}
+
+@media (max-width: 1000px) {
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  .metric-grid,
+  .workflow-grid {
+    grid-template-columns: 1fr;
+  }
+}

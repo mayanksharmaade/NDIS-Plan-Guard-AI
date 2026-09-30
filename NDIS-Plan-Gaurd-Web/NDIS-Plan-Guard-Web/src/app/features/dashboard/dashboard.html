@@ -1,0 +1,112 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">SCREEN 12</div>
+      <h1>Dashboard</h1>
+      <p>Operational overview of participants, claims and review workload for your current access scope.</p>
+    </div>
+    <button class="btn btn-secondary" type="button" (click)="load()">Refresh</button>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+
+  @if (summary(); as s) {
+    <div class="scope-line">Scope: <strong>{{ s.scope }}</strong></div>
+
+    <div class="metric-grid">
+      <article class="metric-card">
+        <small>Total claims</small>
+        <strong>{{ s.totalClaims }}</strong>
+        <span>{{ s.totalClaimAmount | currency:'AUD' }} claimed</span>
+      </article>
+      <article class="metric-card">
+        <small>Approved</small>
+        <strong>{{ s.approvedClaims }}</strong>
+        <span>{{ s.approvedAmount | currency:'AUD' }} approved</span>
+      </article>
+      <article class="metric-card">
+        <small>In review</small>
+        <strong>{{ s.inReviewClaims }}</strong>
+        <span>{{ s.submittedClaims }} submitted / waiting</span>
+      </article>
+      <article class="metric-card">
+        <small>Participants</small>
+        <strong>{{ s.activeParticipants }}</strong>
+        <span>{{ s.totalParticipants }} total participants</span>
+      </article>
+    </div>
+
+    <div class="dashboard-grid">
+      <article class="card">
+        <div class="card-header">
+          <h2>Claim workflow</h2>
+          <a class="btn btn-secondary btn-small" routerLink="/claims">View claims</a>
+        </div>
+        <div class="workflow-grid">
+          <div><span>Draft</span><strong>{{ s.draftClaims }}</strong></div>
+          <div><span>Submitted</span><strong>{{ s.submittedClaims }}</strong></div>
+          <div><span>Processing</span><strong>{{ s.inReviewClaims }}</strong></div>
+          <div><span>More info</span><strong>{{ s.moreInformationRequiredClaims }}</strong></div>
+          <div><span>Approved</span><strong>{{ s.approvedClaims }}</strong></div>
+          <div><span>Rejected</span><strong>{{ s.rejectedClaims }}</strong></div>
+        </div>
+      </article>
+
+      @if (s.scope === 'Internal') {
+        <article class="card">
+          <h2>Provider administration</h2>
+          <div class="provider-metrics">
+            <div>
+              <small>Pending registrations</small>
+              <strong>{{ s.pendingProviderRegistrations }}</strong>
+            </div>
+            <div>
+              <small>Active Service Providers</small>
+              <strong>{{ s.activeServiceProviders }}</strong>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+
+    <article class="card recent-card">
+      <div class="card-header">
+        <h2>Recent claims</h2>
+        <a class="btn btn-secondary btn-small" routerLink="/audit">Activity history</a>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Claim</th>
+              <th>Participant</th>
+              @if (s.scope === 'Internal') { <th>Provider</th> }
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (claim of s.recentClaims; track claim.claimId) {
+              <tr>
+                <td><a class="claim-link" [routerLink]="['/claims', claim.claimId]">{{ claim.claimNumber }}</a></td>
+                <td>{{ claim.participantName }}</td>
+                @if (s.scope === 'Internal') { <td>{{ claim.serviceProviderName || '—' }}</td> }
+                <td>{{ claim.amount | currency:'AUD' }}</td>
+                <td><span class="badge">{{ claim.status }}</span></td>
+                <td>{{ claim.createdAtUtc | date:'mediumDate' }}</td>
+              </tr>
+            } @empty {
+              <tr><td [attr.colspan]="s.scope === 'Internal' ? 6 : 5">No recent claims.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </article>
+  } @else if (loading()) {
+    <div class="card">Loading dashboard…</div>
+  }
+</section>

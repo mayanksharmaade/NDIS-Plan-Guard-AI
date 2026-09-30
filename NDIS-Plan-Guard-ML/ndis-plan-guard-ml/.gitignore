@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+*.pyo
+.DS_Store
+reports/figures/*.png
+data/synthetic/*.csv
+data/processed/*.csv

@@ -1,0 +1,20 @@
+{
+  "random_seed": 42,
+  "claim_count": 15000,
+  "participant_count": 1200,
+  "provider_count": 220,
+  "start_date": "2025-01-01",
+  "end_date": "2026-08-31",
+  "dataset_version": "claim-risk-training-v2",
+  "feature_version": "risk-features-v2",
+  "target_column": "risk_label",
+  "expected_positive_rate_min": 0.1,
+  "expected_positive_rate_max": 0.3,
+  "rows": 15000,
+  "columns": 52,
+  "positive_count": 1589,
+  "negative_count": 13411,
+  "positive_rate": 0.105933,
+  "synthetic_data_notice": "Demo/portfolio synthetic claims only; not real NDIS participant data.",
+  "label_notice": "Synthetic elevated-review-risk label; not a fraud determination or approval decision."
+}

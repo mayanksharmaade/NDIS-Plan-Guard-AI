@@ -1,0 +1,47 @@
+{
+  "claimId": "C006451",
+  "riskProbability": 0.999998,
+  "riskScore": 100,
+  "riskBand": "High",
+  "topFactors": [
+    {
+      "feature": "claim_to_participant_avg",
+      "description": "Current claim relative to participant historical average",
+      "observedValue": 58.1395,
+      "baselineValue": 0.8833599999999999,
+      "probabilityImpact": 0.02191
+    },
+    {
+      "feature": "claim_amount",
+      "description": "Current claim amount at submission",
+      "observedValue": 5559.59,
+      "baselineValue": 344.17999999999995,
+      "probabilityImpact": 2.5e-05
+    },
+    {
+      "feature": "claim_to_provider_avg",
+      "description": "Current claim relative to provider historical average",
+      "observedValue": 12.04412,
+      "baselineValue": 0.762015,
+      "probabilityImpact": 5e-06
+    },
+    {
+      "feature": "validation_finding_count",
+      "description": "Deterministic validation findings available before review",
+      "observedValue": 1,
+      "baselineValue": 0.0,
+      "probabilityImpact": 2e-06
+    },
+    {
+      "feature": "units",
+      "description": "Claimed service units",
+      "observedValue": 6,
+      "baselineValue": 3.0,
+      "probabilityImpact": 0.0
+    }
+  ],
+  "modelVersion": "risk-model-v1",
+  "featureVersion": "risk-features-v1",
+  "scoredAtUtc": "2026-09-10T12:43:24.707664Z",
+  "decisionSupportNotice": "Decision-support risk signal only. This score is not a fraud determination and must not autonomously approve or reject an NDIS claim."
+}

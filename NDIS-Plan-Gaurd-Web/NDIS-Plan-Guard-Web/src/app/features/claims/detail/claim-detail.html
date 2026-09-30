@@ -1,0 +1,121 @@
+<section class="page narrow-page">
+  <div class="page-header">
+    <div>
+      <a routerLink="/claims" class="back-link">← Claims</a>
+      <h1>Claim details</h1>
+      <p>Review the current claim state, service details and submission information.</p>
+    </div>
+    @if (claim(); as c) {
+      <div class="actions-row">
+        <a class="btn btn-secondary" [routerLink]="['/audit']" [queryParams]="{ entityType: 'Claim', entityId: c.id }">Activity</a>
+        @if (canEdit()) {
+          <a class="btn btn-ghost" [routerLink]="['/claims', c.id, 'edit']">Edit</a>
+          <button class="btn btn-primary" type="button" [disabled]="submitting()" (click)="submit()">
+            {{ submitting() ? 'Submitting…' : (c.status === 'MoreInformationRequired' ? 'Resubmit claim' : 'Submit claim') }}
+          </button>
+        }
+      </div>
+    }
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-error">{{ error() }}</div>
+  }
+  @if (message()) {
+    <div class="alert alert-success">{{ message() }}</div>
+  }
+
+  @if (claim(); as c) {
+    <div class="summary-strip">
+      <span>Claim <strong>{{ c.claimNumber }}</strong></span>
+      <span>Status <strong>{{ c.status }}</strong></span>
+      <span>Amount <strong>{{ c.amount | currency:'AUD' }}</strong></span>
+    </div>
+
+    @if (c.status === 'MoreInformationRequired') {
+      <div class="alert alert-error">More information has been requested. Update the draft and resubmit it for review.</div>
+    }
+
+    <article class="card detail-grid">
+      <div>
+        <small>Participant</small>
+        <strong>{{ c.participantName }}</strong>
+        <span>{{ c.participantNdisNumber }}</span>
+      </div>
+      <div>
+        <small>Support category</small>
+        <strong>{{ supportServiceName(c.supportCategory) }}</strong>
+      </div>
+      <div>
+        <small>Service period</small>
+        <strong>{{ c.serviceFrom | date:'mediumDate' }} – {{ c.serviceTo | date:'mediumDate' }}</strong>
+      </div>
+      <div>
+        <small>Submitted</small>
+        <strong>{{ c.submittedAtUtc ? (c.submittedAtUtc | date:'medium') : 'Not submitted' }}</strong>
+      </div>
+      @if (c.employeeName) {
+        <div>
+          <small>Support worker</small>
+          <strong>{{ c.employeeName }}</strong>
+        </div>
+      }
+      @if (c.totalServiceHours !== null && c.totalServiceHours !== undefined) {
+        <div>
+          <small>Support hours</small>
+          <strong>{{ c.totalServiceHours }}</strong>
+        </div>
+      }
+      @if (c.agreedHourlyRate !== null && c.agreedHourlyRate !== undefined) {
+        <div>
+          <small>Agreed participant billing rate</small>
+          <strong>{{ c.agreedHourlyRate | currency:'AUD' }} / hour</strong>
+        </div>
+      }
+      @if (c.totalServiceHours !== null && c.totalServiceHours !== undefined && c.agreedHourlyRate !== null && c.agreedHourlyRate !== undefined) {
+        <div>
+          <small>Calculated claim</small>
+          <strong>{{ c.totalServiceHours }} × {{ c.agreedHourlyRate | currency:'AUD' }} = {{ c.amount | currency:'AUD' }}</strong>
+        </div>
+      }
+      <div class="span-2">
+        <small>Description</small>
+        <p>{{ c.description }}</p>
+      </div>
+    </article>
+
+    @if (c.serviceDeliveries?.length) {
+      <article class="card">
+        <h2>Claimed service deliveries</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date / time</th>
+                <th>Support worker</th>
+                <th>Service</th>
+                <th>Hours</th>
+                <th>Billing rate</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (delivery of c.serviceDeliveries ?? []; track delivery.id) {
+                <tr>
+                  <td>{{ delivery.serviceStartUtc | date:'medium' }}</td>
+                  <td>{{ delivery.employeeName }}</td>
+                  <td>{{ supportServiceName(delivery.supportCategory) }}</td>
+                  <td>{{ delivery.serviceHours }}</td>
+                  <td>{{ delivery.hourlyRate | currency:'AUD' }}</td>
+                  <td>{{ delivery.amount | currency:'AUD' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </article>
+    }
+  } @else if (loading()) {
+    <div class="card">Loading claim…</div>
+  }
+</section>
